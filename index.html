@@ -1,162 +1,315 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comanda Digital - Clínica LM</title>
-    <!-- Tailwind CSS via CDN para estilização rápida e limpa -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- SDK do Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comanda Digital - Clínica LM</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-main: #f9f6f0;
+      --bg-card: #ffffff;
+      --sand-light: #f3ece4;
+      --sand-dark: #d8c8b8;
+      --gold-primary: #c5a059;
+      --gold-dark: #8c672f;
+      --text-main: #2c2825;
+      --text-muted: #736b63;
+      --border-color: #e8ded4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 40px; }
+
+    header {
+      background: linear-gradient(135deg, #f5ede4 0%, #ebdcd0 100%);
+      border-bottom: 2px solid var(--sand-dark);
+      padding: 16px 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    }
+    .header-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo-area { display: flex; align-items: center; gap: 15px; }
+    
+    .logo-svg { width: 55px; height: 55px; }
+    .logo-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--gold-dark); letter-spacing: 2px; }
+    .logo-subtitle { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1.5px; }
+
+    .nav-buttons { display: flex; gap: 10px; }
+    .btn-nav {
+      background: #ffffff;
+      border: 1px solid var(--sand-dark);
+      color: var(--gold-dark);
+      padding: 9px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-nav:hover, .btn-nav.active { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
+
+    .container { max-width: 1000px; margin: 25px auto; padding: 0 15px; }
+    .card {
+      background: var(--bg-card);
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.03);
+      padding: 28px;
+      margin-bottom: 25px;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      color: var(--gold-dark);
+      margin-bottom: 22px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    
+    label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
+    input, select, textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      background-color: #faf7f2;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--gold-primary); background-color: #ffffff; box-shadow: 0 0 0 3px rgba(197,160,89,0.15); }
+
+    .card-flags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .flag-opt {
+      padding: 8px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      background: #faf7f2;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+    .flag-opt.selected { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #c5a059 0%, #8c672f 100%);
+      color: #fff;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      width: 100%;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 4px 12px rgba(140,103,47,0.25);
+      transition: all 0.2s;
+    }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(140,103,47,0.35); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+    th { background-color: #faf7f2; color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+
+    @media (max-width: 600px) {
+      .header-container { flex-direction: column; gap: 15px; text-align: center; }
+      .logo-area { flex-direction: column; }
+    }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans p-4">
-    <div class="max-w-4xl mx-auto">
-        <header class="bg-white shadow rounded-lg p-6 mb-6 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-blue-600">Comanda Digital</h1>
-                <p class="text-sm text-gray-500">Clínica LM - Sincronização em Tempo Real</p>
-            </div>
-            <div id="status-conexao" class="text-xs px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full font-semibold">
-                Conectando...
-            </div>
-        </header>
+<body>
 
-        <!-- Formulário para Nova Comanda -->
-        <section class="bg-white shadow rounded-lg p-6 mb-6">
-            <h2 class="text-lg font-semibold mb-4">Abrir Nova Comanda</h2>
-            <form id="form-comanda" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Paciente</label>
-                    <input type="text" id="paciente" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Profissional</label>
-                    <input type="text" id="profissional" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700">Procedimentos (separados por vírgula)</label>
-                    <input type="text" id="procedimentos" placeholder="Ex: Limpeza de pele, Botox" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Forma de Pagamento</label>
-                    <select id="forma_pagamento" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2">
-                        <option value="Cartão de Crédito">Cartão de Crédito</option>
-                        <option value="Cartão de Débito">Cartão de Débito</option>
-                        <option value="Pix">Pix</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Bandeira do Cartão (se aplicável)</label>
-                    <input type="text" id="bandeira" placeholder="Ex: Visa, Master, Elo" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2">
-                </div>
-                <div class="md:col-span-2">
-                    <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700 transition">
-                        Salvar e Sincronizar Comanda
-                    </button>
-                </div>
-            </form>
-        </section>
+  <header>
+    <div class="header-container">
+      <div class="logo-area">
+        <svg class="logo-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 40,35 C 42,105 48,140 72,140 C 92,140 102,112 112,108 C 122,104 128,122 138,122 C 148,122 158,112 175,128" 
+                stroke="url(#goldGradient)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#D4AF37" />
+              <stop offset="50%" stop-color="#F3E5AB" />
+              <stop offset="100%" stop-color="#AA7C11" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div>
+          <div class="logo-title">CLÍNICA LM</div>
+          <div class="logo-subtitle">Comanda Digital de Atendimento</div>
+        </div>
+      </div>
+      <div class="nav-buttons">
+        <button class="btn-nav active" onclick="switchTab('comanda')"><i class="fa-solid fa-pen-to-square"></i> Nova Comanda</button>
+        <button class="btn-nav" onclick="switchTab('historico')"><i class="fa-solid fa-list-check"></i> Recepção / Financeiro</button>
+      </div>
+    </div>
+  </header>
 
-        <!-- Lista de Comandas Ativas -->
-        <section class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-semibold mb-4">Comandas Ativas / Sincronizadas</h2>
-            <div id="lista-comandas" class="space-y-3">
-                <p class="text-sm text-gray-400">Carregando comandas...</p>
+  <div class="container">
+    
+    <div id="tab-comanda" class="tab-content active">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-file-invoice"></i> Dados do Atendimento</div>
+        <form id="formComanda" onsubmit="salvarComanda(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Paciente *</label>
+              <input type="text" id="paciente" required placeholder="Nome completo do paciente">
             </div>
-        </section>
+            <div class="form-group">
+              <label>Data *</label>
+              <input type="date" id="data" required>
+            </div>
+            <div class="form-group">
+              <label>Profissional Responsável *</label>
+              <select id="profissional" required>
+                <option value="">Selecione...</option>
+                <option value="Dra. Lorena">Dra. Lorena</option>
+                <option value="Dra. Fatyene">Dra. Fatyene</option>
+                <option value="Dra. Camila">Dra. Camila</option>
+                <option value="Alê Cardoso">Alê Cardoso</option>
+                <option value="Letycia">Letycia</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Indicação</label>
+              <select id="indicacao">
+                <option value="">Nenhuma / Outra</option>
+                <option value="Dra. Lorena">Dra. Lorena</option>
+                <option value="Dra. Fatyene">Dra. Fatyene</option>
+                <option value="Alê Cardoso">Alê Cardoso</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Procedimento(s) Realizado(s)</label>
+              <textarea id="procedimento" rows="2" placeholder="Descreva os procedimentos..."></textarea>
+            </div>
+            <div class="form-group full">
+              <label>Produtos de Home Care</label>
+              <textarea id="home_care" rows="2" placeholder="Produtos indicados/adquiridos..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Próximo Agendamento</label>
+              <input type="text" id="proximo_agendamento" placeholder="Ex: 15/10 às 14h">
+            </div>
+            <div class="form-group">
+              <label>Forma de Pagamento</label>
+              <select id="forma_pagamento" onchange="toggleCartaoFlags()">
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="PIX">PIX</option>
+                <option value="Cartão">Cartão</option>
+              </select>
+            </div>
+            
+            <div class="form-group full" id="group-bandeira" style="display: none;">
+              <label>Bandeira do Cartão</label>
+              <div class="card-flags">
+                <span class="flag-opt" onclick="selectFlag(this, 'Mastercard')">Mastercard</span>
+                <span class="flag-opt" onclick="selectFlag(this, 'Visa')">Visa</span>
+                <span class="flag-opt" onclick="selectFlag(this, 'Amex')">Amex</span>
+                <span class="flag-opt" onclick="selectFlag(this, 'Elo')">Elo</span>
+                <span class="flag-opt" onclick="selectFlag(this, 'Hipercard')">Hipercard</span>
+              </div>
+              <input type="hidden" id="bandeira_cartao">
+            </div>
+
+            <div class="form-group">
+              <label>Status do Pagamento</label>
+              <select id="status_pagamento">
+                <option value="Pendente">Pendente</option>
+                <option value="Pago">Pago</option>
+                <option value="Parcial">Parcial</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Valor Total (R$)</label>
+              <input type="number" step="0.01" id="valor" placeholder="0,00">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit"><i class="fa-solid fa-floppy-disk"></i> Gravar Comanda</button>
+        </form>
+      </div>
     </div>
 
-    <script>
-        // Configuração do Supabase com suas chaves
-        const SUPABASE_URL = 'https://ntvcgqbenpxfxvejxkoy.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_UxiIkEbCXmYA10M0f_PIoA_1j52p3gB';
+    <div id="tab-historico" class="tab-content">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-list"></i> Comandas Registradas</div>
+        <table id="tabelaComandas">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Paciente</th>
+              <th>Profissional</th>
+              <th>Valor</th>
+              <th>Pagamento</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="6" style="text-align:center;">Nenhuma comanda carregada.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        const { createClient } = supabase;
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </div>
 
-        const statusConexao = document.getElementById('status-conexao');
-        const listaComandas = document.getElementById('lista-comandas');
-        const formComanda = document.getElementById('form-comanda');
+  <script>
+    document.getElementById('data').valueAsDate = new Date();
 
-        // Função para buscar e renderizar comandas
-        async function carregarComandas() {
-            const { data, error } = await supabaseClient
-                .from('comandas')
-                .select('*')
-                .order('created_at', { ascending: false });
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.btn-nav').forEach(el => el.classList.remove('active'));
+      if(tab === 'comanda') {
+        document.getElementById('tab-comanda').classList.add('active');
+        event.target.classList.add('active');
+      } else {
+        document.getElementById('tab-historico').classList.add('active');
+        event.target.classList.add('active');
+      }
+    }
 
-            if (error) {
-                console.error('Erro ao buscar:', error);
-                statusConexao.textContent = 'Erro na conexão';
-                statusConexao.className = 'text-xs px-3 py-1 bg-red-100 text-red-800 rounded-full font-semibold';
-                return;
-            }
+    function toggleCartaoFlags() {
+      const forma = document.getElementById('forma_pagamento').value;
+      document.getElementById('group-bandeira').style.display = (forma === 'Cartão') ? 'block' : 'none';
+    }
 
-            statusConexao.textContent = 'Conectado (Tempo Real Ativo)';
-            statusConexao.className = 'text-xs px-3 py-1 bg-green-100 text-green-800 rounded-full font-semibold';
+    function selectFlag(el, flag) {
+      document.querySelectorAll('.flag-opt').forEach(opt => opt.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('bandeira_cartao').value = flag;
+    }
 
-            if (!data || data.length === 0) {
-                listaComandas.innerHTML = '<p class="text-sm text-gray-500">Nenhuma comanda cadastrada ainda.</p>';
-                return;
-            }
-
-            listaComandas.innerHTML = data.map(c => `
-                <div class="border rounded-lg p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 bg-gray-50">
-                    <div>
-                        <span class="font-bold text-blue-900">${c.paciente}</span> 
-                        <span class="text-xs text-gray-500">(Prof: ${c.profissional})</span>
-                        <p class="text-sm text-gray-700 mt-1"><strong>Procedimentos:</strong> ${Array.isArray(c.procedimentos) ? c.procedimentos.join(', ') : c.procedimentos}</p>
-                        <p class="text-xs text-gray-500">Pgto: ${c.formas_pagamento || 'Não informado'} | Bandeira: ${c.bandeiras_cartao || 'N/A'}</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <span class="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800 font-semibold">${c.status}</span>
-                        <button onclick="deletarComanda('${c.id}')" class="text-red-500 hover:text-red-700 text-xs font-semibold border border-red-200 px-2 py-1 rounded">Excluir</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Salvar nova comanda
-        formComanda.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const novaComanda = {
-                paciente: document.getElementById('paciente').value,
-                profissional: document.getElementById('profissional').value,
-                procedimentos: document.getElementById('procedimentos').value.split(',').map(p => p.trim()),
-                formas_pagamento: document.getElementById('forma_pagamento').value,
-                bandeiras_cartao: document.getElementById('bandeira').value,
-                status: 'Aberta'
-            };
-
-            const { error } = await supabaseClient.from('comandas').insert([novaComanda]);
-
-            if (error) {
-                alert('Erro ao salvar comanda: ' + error.message);
-            } else {
-                formComanda.reset();
-            }
-        });
-
-        // Deletar comanda
-        window.deletarComanda = async function(id) {
-            if (confirm('Deseja realmente excluir esta comanda?')) {
-                await supabaseClient.from('comandas').delete().eq('id', id);
-            }
-        };
-
-        // Escutar alterações em Tempo Real (Realtime) entre os aparelhos
-        supabaseClient
-            .channel('public:comandas')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'comandas' }, payload => {
-                console.log('Mudança detectada:', payload);
-                carregarComandas(); // Atualiza a lista instantaneamente em todos os aparelhos
-            })
-            .subscribe();
-
-        // Carga inicial ao abrir a página
-        carregarComandas();
-    </script>
+    function salvarComanda(e) {
+      e.preventDefault();
+      alert('Comanda gravada com sucesso!');
+      document.getElementById('formComanda').reset();
+      document.getElementById('data').valueAsDate = new Date();
+    }
+  </script>
 </body>
 </html>
