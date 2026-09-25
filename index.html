@@ -18,8 +18,6 @@
       --gold-dark: #8c672f;         /* Dourado profundo */
       --text-main: #3a322d;         /* Marrom aquecido / Moka */
       --text-muted: #8c827a;       /* Marrom suave */
-      --status-pending: #d97706;    /* Laranja moka para pendente */
-      --status-approved: #2e7d32;   /* Verde veludo para aprovado */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
@@ -106,7 +104,7 @@
       box-shadow: 0 0 0 3px rgba(197,160,89,0.12); 
     }
 
-    /* Tabelas Dinâmicas de Itens com Rótulos Visíveis */
+    /* Tabelas Dinâmicas com Rótulos Visíveis */
     .section-block { margin-top: 28px; padding-top: 18px; border-top: 1px dashed var(--sand-border); }
     .section-block-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--gold-dark); letter-spacing: 1px; margin-bottom: 14px; }
 
@@ -195,7 +193,7 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* Histórico e Edição */
+    /* Histórico */
     .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 25px; }
     .summary-card { background: var(--sand-light); border: 1px solid var(--sand-border); border-radius: 12px; padding: 18px; text-align: center; }
     .summary-card .title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
@@ -221,7 +219,7 @@
       background: var(--sand-light);
       border: 1px solid var(--sand-border);
       color: var(--gold-dark);
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
@@ -233,7 +231,7 @@
       background: var(--gold-primary);
       border: none;
       color: #fff;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
@@ -466,7 +464,7 @@
       calcularGeral();
     }
 
-    function addPaymentRow(valor = '0.00', metodo = 'Outras bandeiras', conta = 'ITAÚ', parcelas = 'A vista') {
+    function addPaymentRow(valor = '0.00', metodo = 'Outras bandeiras', conta = 'ITAÚ', vencimento = '', parcelas = 'A vista') {
       const container = document.getElementById('payments-container');
       const div = document.createElement('div');
       div.className = 'payment-row';
@@ -484,7 +482,7 @@
           <option value="INTER" ${conta==='INTER'?'selected':''}>INTER</option>
           <option value="CAIXINHA" ${conta==='CAIXINHA'?'selected':''}>CAIXINHA</option>
         </select>
-        <input type="date" class="pay-vencimento">
+        <input type="date" class="pay-vencimento" value="${vencimento}">
         <select class="pay-parcelas">
           <option value="A vista" ${parcelas==='A vista'?'selected':''}>A vista</option>
           <option value="2x" ${parcelas==='2x'?'selected':''}>2x</option>
@@ -496,7 +494,7 @@
         <button type="button" class="btn-remove-row" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
       `;
       container.appendChild(div);
-      div.querySelector('.pay-vencimento').valueAsDate = new Date();
+      if(!vencimento) div.querySelector('.pay-vencimento').valueAsDate = new Date();
       calcularGeral();
     }
 
@@ -523,6 +521,33 @@
       document.getElementById('lbl-total-liquido').innerText = 'R$ ' + totalLiquido.toFixed(2);
     }
 
+    function capturarItensFormulario() {
+      const itens = [];
+      document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
+        itens.push({
+          nome: row.querySelector('.item-nome').value,
+          qtd: row.querySelector('.item-qtd').value,
+          valor: row.querySelector('.item-valor').value,
+          desc: row.querySelector('.item-desc').value
+        });
+      });
+      return itens;
+    }
+
+    function capturarPagamentosFormulario() {
+      const pagamentos = [];
+      document.querySelectorAll('#payments-container .payment-row').forEach(row => {
+        pagamentos.push({
+          valor: row.querySelector('.pay-valor').value,
+          metodo: row.querySelector('.pay-metodo').value,
+          conta: row.querySelector('.pay-conta').value,
+          vencimento: row.querySelector('.pay-vencimento').value,
+          parcelas: row.querySelector('.pay-parcelas').value
+        });
+      });
+      return pagamentos;
+    }
+
     function salvarComanda(e) {
       e.preventDefault();
       
@@ -537,6 +562,9 @@
         categoria: document.getElementById('categoria').value,
         indicacao: document.getElementById('indicacao').value,
         proximo_atendimento: document.getElementById('proximo_atendimento').value,
+        taxas_maquininha: document.getElementById('taxas_maquininha').value,
+        itens: capturarItensFormulario(),
+        pagamentos: capturarPagamentosFormulario(),
         total: totalBrutoStr,
         status: editIndex >= 0 ? comandasDados[editIndex].status : 'Pendente de Aprovação'
       };
@@ -597,6 +625,8 @@
 
     function editarComanda(index) {
       const c = comandasDados[index];
+      
+      // Preencher dados gerais
       document.getElementById('edit_index').value = index;
       document.getElementById('paciente').value = c.cliente;
       document.getElementById('vendedor').value = c.vendedor;
@@ -604,6 +634,23 @@
       document.getElementById('data_venda').value = c.data;
       document.getElementById('indicacao').value = c.indicacao || '';
       document.getElementById('proximo_atendimento').value = c.proximo_atendimento || '';
+      document.getElementById('taxas_maquininha').value = c.taxas_maquininha || '0.00';
+
+      // Reconstruir lista de procedimentos/produtos salvos
+      document.getElementById('items-container').innerHTML = '';
+      if(c.itens && c.itens.length > 0) {
+        c.itens.forEach(it => addItemRow(it.nome, it.qtd, it.valor, it.desc));
+      } else {
+        addItemRow();
+      }
+
+      // Reconstruir lista de pagamentos salvos
+      document.getElementById('payments-container').innerHTML = '';
+      if(c.pagamentos && c.pagamentos.length > 0) {
+        c.pagamentos.forEach(p => addPaymentRow(p.valor, p.metodo, p.conta, p.vencimento, p.parcelas));
+      } else {
+        addPaymentRow();
+      }
 
       document.getElementById('form-title').innerText = "Editar Comanda";
       document.getElementById('edit-indicator').style.display = "inline";
