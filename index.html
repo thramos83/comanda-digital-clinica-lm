@@ -26,7 +26,7 @@
     header {
       background: linear-gradient(135deg, #f5ede4 0%, #ebdcd0 100%);
       border-bottom: 2px solid var(--sand-dark);
-      padding: 16px 20px;
+      padding: 18px 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.04);
     }
     .header-container {
@@ -80,6 +80,7 @@
       gap: 10px;
     }
 
+    /* Grid com margens e alinhamentos simétricos */
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full { grid-column: 1 / -1; }
@@ -96,7 +97,15 @@
       outline: none;
       transition: all 0.2s;
     }
-    input:focus, select:focus, textarea:focus { border-color: var(--gold-primary); background-color: #ffffff; box-shadow: 0 0 0 3px rgba(197,160,89,0.15); }
+    
+    /* Centralização da Data */
+    input[type="date"], #data { text-align: center; }
+
+    input:focus, select:focus, textarea:focus { 
+      border-color: var(--gold-primary); 
+      background-color: #ffffff; 
+      box-shadow: 0 0 0 3px rgba(197,160,89,0.15); 
+    }
 
     .card-flags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
     .flag-opt {
@@ -108,6 +117,7 @@
       background: #faf7f2;
       font-weight: 600;
       color: var(--text-main);
+      transition: all 0.2s;
     }
     .flag-opt.selected { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
 
@@ -130,9 +140,70 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-color); }
+    /* Cards do Resumo Financeiro */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+    .summary-card {
+      background: #faf7f2;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+    .summary-card .title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
+    .summary-card .value { font-size: 20px; font-weight: 700; color: var(--gold-dark); margin-top: 6px; }
+
+    /* Barra de Busca e Filtros */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    .filter-bar input, .filter-bar select { flex: 1; min-width: 180px; }
+    .btn-quick-filter {
+      padding: 10px 14px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+    .btn-quick-filter:hover, .btn-quick-filter.active { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
+
+    /* Tabela Responsiva com Alinhamento Perfeito */
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 700px; }
+    th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); }
     th { background-color: #faf7f2; color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+
+    .badge-status {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-pago { background-color: #e2f0d9; color: #385723; }
+    .badge-pendente { background-color: #fce4d6; color: #c65911; }
+
+    .btn-action {
+      background: none;
+      border: none;
+      color: var(--gold-dark);
+      cursor: pointer;
+      font-size: 15px;
+      padding: 4px;
+    }
+
+    .total-highlight { background-color: #f3ece4; font-weight: bold; color: var(--gold-dark); }
 
     @media (max-width: 600px) {
       .header-container { flex-direction: column; gap: 15px; text-align: center; }
@@ -162,14 +233,15 @@
         </div>
       </div>
       <div class="nav-buttons">
-        <button class="btn-nav active" onclick="switchTab('comanda')"><i class="fa-solid fa-pen-to-square"></i> Nova Comanda</button>
-        <button class="btn-nav" onclick="switchTab('historico')"><i class="fa-solid fa-list-check"></i> Recepção / Financeiro</button>
+        <button class="btn-nav active" onclick="switchTab('comanda', this)"><i class="fa-solid fa-pen-to-square"></i> Nova Comanda</button>
+        <button class="btn-nav" onclick="switchTab('historico', this)"><i class="fa-solid fa-list-check"></i> Recepção / Financeiro</button>
       </div>
     </div>
   </header>
 
   <div class="container">
     
+    <!-- ABA NOVA COMANDA -->
     <div id="tab-comanda" class="tab-content active">
       <div class="card">
         <div class="card-title"><i class="fa-solid fa-file-invoice"></i> Dados do Atendimento</div>
@@ -200,7 +272,9 @@
                 <option value="">Nenhuma / Outra</option>
                 <option value="Dra. Lorena">Dra. Lorena</option>
                 <option value="Dra. Fatyene">Dra. Fatyene</option>
+                <option value="Dra. Camila">Dra. Camila</option>
                 <option value="Alê Cardoso">Alê Cardoso</option>
+                <option value="Letycia">Letycia</option>
               </select>
             </div>
             <div class="form-group full">
@@ -212,9 +286,10 @@
               <textarea id="home_care" rows="2" placeholder="Produtos indicados/adquiridos..."></textarea>
             </div>
             <div class="form-group">
-              <label>Próximo Agendamento</label>
-              <input type="text" id="proximo_agendamento" placeholder="Ex: 15/10 às 14h">
+              <label>Próximo Agendamento / Retorno</label>
+              <input type="text" id="proximo_agendamento" placeholder="Ex: Retorno em 15 dias (10/10 às 14h)">
             </div>
+            
             <div class="form-group">
               <label>Forma de Pagamento</label>
               <select id="forma_pagamento" onchange="toggleCartaoFlags()">
@@ -225,7 +300,7 @@
             </div>
             
             <div class="form-group full" id="group-bandeira" style="display: none;">
-              <label>Bandeira do Cartão</label>
+              <label>Bandeira & Parcelas do Cartão</label>
               <div class="card-flags">
                 <span class="flag-opt" onclick="selectFlag(this, 'Mastercard')">Mastercard</span>
                 <span class="flag-opt" onclick="selectFlag(this, 'Visa')">Visa</span>
@@ -233,6 +308,16 @@
                 <span class="flag-opt" onclick="selectFlag(this, 'Elo')">Elo</span>
                 <span class="flag-opt" onclick="selectFlag(this, 'Hipercard')">Hipercard</span>
               </div>
+              <select id="parcelas_cartao" style="margin-top: 8px;">
+                <option value="1x À vista">À vista (1x)</option>
+                <option value="2x">2x sem juros</option>
+                <option value="3x">3x sem juros</option>
+                <option value="4x">4x</option>
+                <option value="5x">5x</option>
+                <option value="6x">6x</option>
+                <option value="10x">10x</option>
+                <option value="12x">12x</option>
+              </select>
               <input type="hidden" id="bandeira_cartao">
             </div>
 
@@ -244,10 +329,23 @@
                 <option value="Parcial">Parcial</option>
               </select>
             </div>
+
+            <!-- CÁLCULO AUTOMÁTICO DE VALORES -->
             <div class="form-group">
-              <label>Valor Total (R$)</label>
-              <input type="number" step="0.01" id="valor" placeholder="0,00">
+              <label>Valor Procedimento(s) (R$)</label>
+              <input type="number" step="0.01" id="valor_procedimento" placeholder="0,00" oninput="calcularTotal()">
             </div>
+
+            <div class="form-group">
+              <label>Valor Produto(s) (R$)</label>
+              <input type="number" step="0.01" id="valor_produto" placeholder="0,00" oninput="calcularTotal()">
+            </div>
+
+            <div class="form-group full">
+              <label>Valor Total Somado (R$)</label>
+              <input type="number" step="0.01" id="valor" class="total-highlight" placeholder="0,00" readonly>
+            </div>
+
           </div>
 
           <button type="submit" class="btn-submit"><i class="fa-solid fa-floppy-disk"></i> Gravar Comanda</button>
@@ -255,24 +353,64 @@
       </div>
     </div>
 
+    <!-- ABA HISTÓRICO / RECEPÇÃO / FINANCEIRO -->
     <div id="tab-historico" class="tab-content">
+      
+      <!-- Resumo Financeiro em Cards -->
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="title">Total Faturado</div>
+          <div class="value" id="total-faturado">R$ 0,00</div>
+        </div>
+        <div class="summary-card">
+          <div class="title">Total Recebido (Pago)</div>
+          <div class="value" style="color: #2e7d32;" id="total-pago">R$ 0,00</div>
+        </div>
+        <div class="summary-card">
+          <div class="title">Pendente de Cobrança</div>
+          <div class="value" style="color: #c65911;" id="total-pendente">R$ 0,00</div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-title"><i class="fa-solid fa-list"></i> Comandas Registradas</div>
-        <table id="tabelaComandas">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Paciente</th>
-              <th>Profissional</th>
-              <th>Valor</th>
-              <th>Pagamento</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td colspan="6" style="text-align:center;">Nenhuma comanda carregada.</td></tr>
-          </tbody>
-        </table>
+        
+        <!-- Barra de Busca e Filtros Rápidos -->
+        <div class="filter-bar">
+          <input type="text" id="search-paciente" placeholder="🔍 Buscar por paciente..." onkeyup="filtrarComandas()">
+          <select id="filter-profissional" onchange="filtrarComandas()">
+            <option value="">Todas as Profissionais</option>
+            <option value="Dra. Lorena">Dra. Lorena</option>
+            <option value="Dra. Fatyene">Dra. Fatyene</option>
+            <option value="Dra. Camila">Dra. Camila</option>
+            <option value="Alê Cardoso">Alê Cardoso</option>
+            <option value="Letycia">Letycia</option>
+          </select>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn-quick-filter active" onclick="setFilterPeriod('hoje', this)">Hoje</button>
+            <button class="btn-quick-filter" onclick="setFilterPeriod('semana', this)">Semana</button>
+            <button class="btn-quick-filter" onclick="setFilterPeriod('todos', this)">Todos</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table id="tabelaComandas">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Paciente</th>
+                <th>Profissional</th>
+                <th>Valor Total</th>
+                <th>Pagamento</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="lista-comandas-body">
+              <tr><td colspan="7" style="text-align:center; color: var(--text-muted);">Carregando comandas...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -280,17 +418,21 @@
 
   <script>
     document.getElementById('data').valueAsDate = new Date();
+    let comandasDados = [];
 
-    function switchTab(tab) {
+    function calcularTotal() {
+      const vProc = parseFloat(document.getElementById('valor_procedimento').value) || 0;
+      const vProd = parseFloat(document.getElementById('valor_produto').value) || 0;
+      const total = vProc + vProd;
+      document.getElementById('valor').value = total.toFixed(2);
+    }
+
+    function switchTab(tab, btn) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.btn-nav').forEach(el => el.classList.remove('active'));
-      if(tab === 'comanda') {
-        document.getElementById('tab-comanda').classList.add('active');
-        event.target.classList.add('active');
-      } else {
-        document.getElementById('tab-historico').classList.add('active');
-        event.target.classList.add('active');
-      }
+      document.getElementById('tab-' + tab).classList.add('active');
+      if(btn) btn.classList.add('active');
+      if(tab === 'historico') carregarHistorico();
     }
 
     function toggleCartaoFlags() {
@@ -306,9 +448,129 @@
 
     function salvarComanda(e) {
       e.preventDefault();
-      alert('Comanda gravada com sucesso!');
+      
+      const novaComanda = {
+        data: document.getElementById('data').value,
+        paciente: document.getElementById('paciente').value,
+        profissional: document.getElementById('profissional').value,
+        indicacao: document.getElementById('indicacao').value,
+        procedimento: document.getElementById('procedimento').value,
+        home_care: document.getElementById('home_care').value,
+        proximo_agendamento: document.getElementById('proximo_agendamento').value,
+        forma_pagamento: document.getElementById('forma_pagamento').value,
+        bandeira_cartao: document.getElementById('bandeira_cartao').value,
+        parcelas_cartao: document.getElementById('parcelas_cartao').value,
+        status_pagamento: document.getElementById('status_pagamento').value,
+        valor_procedimento: parseFloat(document.getElementById('valor_procedimento').value) || 0,
+        valor_produto: parseFloat(document.getElementById('valor_produto').value) || 0,
+        valor_total: parseFloat(document.getElementById('valor').value) || 0
+      };
+
+      comandasDados.unshift(novaComanda);
+      alert('Comanda de ' + novaComanda.paciente + ' gravada com sucesso!');
       document.getElementById('formComanda').reset();
       document.getElementById('data').valueAsDate = new Date();
+      document.getElementById('group-bandeira').style.display = 'none';
+    }
+
+    function carregarHistorico() {
+      renderizarTabela(comandasDados);
+    }
+
+    function renderizarTabela(dados) {
+      const tbody = document.getElementById('lista-comandas-body');
+      tbody.innerHTML = '';
+
+      if(dados.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma comanda encontrada.</td></tr>';
+        atualizarResumo(0, 0, 0);
+        return;
+      }
+
+      let totalFat = 0, totalP = 0, totalPend = 0;
+
+      dados.forEach((c, index) => {
+        totalFat += c.valor_total;
+        if(c.status_pagamento === 'Pago') totalP += c.valor_total;
+        else totalPend += c.valor_total;
+
+        const dataFmt = c.data ? c.data.split('-').reverse().join('/') : '-';
+        const badgeClass = c.status_pagamento === 'Pago' ? 'badge-pago' : 'badge-pendente';
+
+        const row = `
+          <tr>
+            <td>${dataFmt}</td>
+            <td><strong>${c.paciente}</strong></td>
+            <td>${c.profissional}</td>
+            <td>R$ ${c.valor_total.toFixed(2)}</td>
+            <td>${c.forma_pagamento} ${c.bandeira_cartao ? '(' + c.bandeira_cartao + ')' : ''}</td>
+            <td><span class="badge-status ${badgeClass}">${c.status_pagamento}</span></td>
+            <td>
+              <button class="btn-action" title="Imprimir Comanda" onclick="imprimirComanda(${index})"><i class="fa-solid fa-print"></i></button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+
+      atualizarResumo(totalFat, totalP, totalPend);
+    }
+
+    function atualizarResumo(fat, pago, pend) {
+      document.getElementById('total-faturado').innerText = 'R$ ' + fat.toFixed(2);
+      document.getElementById('total-pago').innerText = 'R$ ' + pago.toFixed(2);
+      document.getElementById('total-pendente').innerText = 'R$ ' + pend.toFixed(2);
+    }
+
+    function filtrarComandas() {
+      const termo = document.getElementById('search-paciente').value.toLowerCase();
+      const prof = document.getElementById('filter-profissional').value;
+
+      const filtradas = comandasDados.filter(c => {
+        const matchNome = c.paciente.toLowerCase().includes(termo);
+        const matchProf = prof === '' || c.profissional === prof;
+        return matchNome && matchProf;
+      });
+
+      renderizarTabela(filtradas);
+    }
+
+    function setFilterPeriod(periodo, btn) {
+      document.querySelectorAll('.btn-quick-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      if(periodo === 'todos') {
+        renderizarTabela(comandasDados);
+        return;
+      }
+
+      const hoje = new Date().toISOString().split('T')[0];
+      const filtradas = comandasDados.filter(c => c.data === hoje);
+      renderizarTabela(filtradas);
+    }
+
+    function imprimirComanda(index) {
+      const c = comandasDados[index];
+      const win = window.open('', '', 'width=600,height=600');
+      win.document.write(`
+        <html>
+        <head><title>Comanda - ${c.paciente}</title></head>
+        <body style="font-family: sans-serif; padding: 20px;">
+          <h2>CLÍNICA LM - COMANDA DIGITAL</h2>
+          <hr>
+          <p><strong>Paciente:</strong> ${c.paciente}</p>
+          <p><strong>Data:</strong> ${c.data}</p>
+          <p><strong>Profissional:</strong> ${c.profissional}</p>
+          <p><strong>Procedimentos:</strong> ${c.procedimento || 'Nenhum'}</p>
+          <p><strong>Produtos:</strong> ${c.home_care || 'Nenhum'}</p>
+          <p><strong>Valor Total:</strong> R$ ${c.valor_total.toFixed(2)}</p>
+          <p><strong>Forma de Pagamento:</strong> ${c.forma_pagamento} (${c.status_pagamento})</p>
+          <br><br>
+          <p style="text-align: center;">___________________________________<br>Assinatura / Conferência</p>
+        </body>
+        </html>
+      `);
+      win.print();
     }
   </script>
 </body>
