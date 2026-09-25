@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Financeiro - Clínica LM</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-main: #fcfbfa;
+      --bg-card: #ffffff;
+      --sand-light: #f7f4ef;
+      --sand-border: #e8e2d9;
+      --gold-primary: #c5a059;
+      --gold-dark: #8c672f;
+      --text-main: #3a322d;
+      --text-muted: #8c827a;
+      --success: #2e7d32;
+      --info-blue: #2563eb;
+      --info-blue-bg: #dbeafe;
+      --danger: #dc2626;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 50px; }
+
+    header {
+      background: linear-gradient(180deg, #f7f4ef 0%, #f2ede4 100%);
+      border-bottom: 1px solid var(--sand-border);
+      padding: 20px;
+    }
+    .header-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 16px; }
+    .logo-svg { width: 48px; height: 48px; }
+    .logo-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 700; color: var(--gold-dark); letter-spacing: 2px; }
+    .logo-subtitle { font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1.5px; }
+
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+    .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+    /* Cards Financeiros */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 25px; }
+    .summary-card { background: var(--bg-card); border: 1px solid var(--sand-border); border-radius: 14px; padding: 20px; text-align: center; box-shadow: 0 8px 25px rgba(58,50,45,0.03); }
+    .summary-card .title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
+    .summary-card .value { font-size: 24px; font-weight: 700; color: var(--gold-dark); margin-top: 8px; }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 1px solid var(--sand-border);
+      box-shadow: 0 8px 25px rgba(58,50,45,0.03);
+      padding: 28px;
+      margin-bottom: 25px;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-dark);
+      margin-bottom: 22px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--sand-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center; }
+    .filter-bar input, .filter-bar select { padding: 9px 12px; border: 1px solid var(--sand-border); border-radius: 8px; font-size: 12px; outline: none; background: var(--sand-light); }
+
+    .btn-filter-quick {
+      padding: 9px 13px;
+      background: var(--bg-card);
+      border: 1px solid var(--sand-border);
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+    .btn-filter-quick.active, .btn-filter-quick:hover { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
+
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 850px; }
+    th, td { padding: 14px; text-align: center; border-bottom: 1px solid var(--sand-border); }
+    th { background-color: var(--sand-light); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.8px; }
+
+    .badge-status {
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .badge-cabine { background-color: #fef3c7; color: #b45309; }
+    .badge-recepcao { background-color: var(--info-blue-bg); color: var(--info-blue); }
+    .badge-aprovado { background-color: #dcfce7; color: #15803d; }
+
+    .btn-action-approve {
+      background: var(--gold-primary);
+      border: none;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .btn-action-delete {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: var(--danger);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .header-container { flex-direction: column; gap: 14px; text-align: center; }
+      .logo-area { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <div class="logo-area">
+        <svg class="logo-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 40,35 C 42,105 48,140 72,140 C 92,140 102,112 112,108 C 122,104 128,122 138,122 C 148,122 158,112 175,128" 
+                stroke="url(#goldGradient)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs>
+            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#D4AF37" />
+              <stop offset="50%" stop-color="#F3E5AB" />
+              <stop offset="100%" stop-color="#AA7C11" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div>
+          <div class="logo-title">CLÍNICA LM</div>
+          <div class="logo-subtitle">Painel Gerencial Financeiro (Thiago)</div>
+        </div>
+      </div>
+
+      <div class="live-status">
+        <span class="live-dot"></span> Sincronização em Tempo Real Ativa
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- CARDS DE RESUMO FINANCEIRO -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="title">Total Faturado (Bruto)</div>
+        <div class="value" id="total-faturado">R$ 0,00</div>
+      </div>
+      <div class="summary-card">
+        <div class="title">Taxas de Maquininha (Rede)</div>
+        <div class="value" style="color: var(--danger);" id="total-taxas">R$ 0,00</div>
+      </div>
+      <div class="summary-card">
+        <div class="title">Receita Líquida Real</div>
+        <div class="value" style="color: var(--success);" id="total-liquido">R$ 0,00</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Gestão e Aprovação de Comandas</div>
+      
+      <!-- FILTROS DE DATA E PROFISSIONAL -->
+      <div class="filter-bar">
+        <input type="text" id="search-paciente" placeholder="🔍 Buscar cliente..." onkeyup="renderizarTabela()">
+        
+        <select id="filter-vendedor" onchange="renderizarTabela()">
+          <option value="">Todas as Profissionais</option>
+          <option value="LORENA MACEDO">LORENA MACEDO</option>
+          <option value="DRA. FATYENE">DRA. FATYENE</option>
+          <option value="DRA. CAMILA">DRA. CAMILA</option>
+          <option value="ALÊ CARDOSO">ALÊ CARDOSO</option>
+          <option value="LETYCIA">LETYCIA</option>
+        </select>
+
+        <button class="btn-filter-quick active" id="btn-f-hoje" onclick="setFiltroData('hoje', this)">Hoje</button>
+        <button class="btn-filter-quick" id="btn-f-mes" onclick="setFiltroData('mes', this)">Este Mês</button>
+        <button class="btn-filter-quick" id="btn-f-todos" onclick="setFiltroData('todos', this)">Todas</button>
+
+        <div style="display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted);">
+          <input type="date" id="filtro-data-inicio" onchange="setFiltroData('custom', null)"> até
+          <input type="date" id="filtro-data-fim" onchange="setFiltroData('custom', null)">
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Cliente</th>
+              <th>Vendedor</th>
+              <th>Categoria</th>
+              <th>Valor Bruto</th>
+              <th>Valor Líquido</th>
+              <th>Status</th>
+              <th>Ações Financeiro</th>
+            </tr>
+          </thead>
+          <tbody id="lista-comandas-body">
+            <tr><td colspan="8" style="text-align:center; color: var(--text-muted);">Aguardando sincronização de comandas...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // CONFIGURAÇÃO SUPABASE REALTIME
+    const SUPABASE_URL = 'https://ntvcgqbenpxfxvejxkoy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_UxiIkEbCXmYA10M0f_PIoA_1j52p3gB';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let comandasDados = [];
+    let filtroPeriodoAtual = 'hoje';
+
+    function formatarMoeda(valor) {
+      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor || 0);
+    }
+
+    window.onload = function() {
+      carregarComandasInicial();
+      ativarRealtimeSupabase();
+    };
+
+    // 1. CARREGAR COMANDAS INICIAIS DO SUPABASE
+    async function carregarComandasInicial() {
+      const { data, error } = await supabaseClient
+        .from('comandas')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        comandasDados = data;
+        renderizarTabela();
+      }
+    }
+
+    // 2. ESCUTAR ALTERAÇÕES EM TEMPO REAL (REALTIME WEBSOCKET)
+    function ativarRealtimeSupabase() {
+      supabaseClient
+        .channel('schema-db-changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'comandas' }, payload => {
+          if (payload.eventType === 'INSERT') {
+            comandasDados.unshift(payload.new);
+          } else if (payload.eventType === 'UPDATE') {
+            const idx = comandasDados.findIndex(c => c.id === payload.new.id);
+            if (idx >= 0) comandasDados[idx] = payload.new;
+          } else if (payload.eventType === 'DELETE') {
+            comandasDados = comandasDados.filter(c => c.id !== payload.old.id);
+          }
+          renderizarTabela();
+        })
+        .subscribe();
+    }
+
+    function setFiltroData(tipo, btn) {
+      filtroPeriodoAtual = tipo;
+      document.querySelectorAll('.btn-filter-quick').forEach(b => b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      renderizarTabela();
+    }
+
+    function renderizarTabela() {
+      const tbody = document.getElementById('lista-comandas-body');
+      tbody.innerHTML = '';
+
+      const termo = document.getElementById('search-paciente').value.toLowerCase();
+      const vendedor = document.getElementById('filter-vendedor').value;
+      const hojeStr = new Date().toISOString().split('T')[0];
+      const mesAtualStr = hojeStr.substring(0, 7);
+
+      const dataInicio = document.getElementById('filtro-data-inicio').value;
+      const dataFim = document.getElementById('filtro-data-fim').value;
+
+      let filtradas = comandasDados.filter(c => {
+        const matchNome = (c.paciente || c.cliente || '').toLowerCase().includes(termo);
+        const matchVendedor = vendedor === '' || c.vendedor === vendedor;
+        let matchData = true;
+
+        if (filtroPeriodoAtual === 'hoje') {
+          matchData = (c.data === hojeStr);
+        } else if (filtroPeriodoAtual === 'mes') {
+          matchData = c.data.startsWith(mesAtualStr);
+        } else if (filtroPeriodoAtual === 'custom' && dataInicio && dataFim) {
+          matchData = (c.data >= dataInicio && c.data <= dataFim);
+        }
+
+        return matchNome && matchVendedor && matchData;
+      });
+
+      if(filtradas.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Nenhuma comanda encontrada para este filtro.</td></tr>';
+        atualizarCardsResumo(0, 0);
+        return;
+      }
+
+      let sumFat = 0, sumLiq = 0;
+
+      filtradas.forEach((c) => {
+        const indexReal = comandasDados.indexOf(c);
+
+        let badgeClass = 'badge-cabine';
+        let statusIcon = '<i class="fa-solid fa-clock"></i>';
+        if (c.status === 'Pagamento Conferido (Recepção)') {
+          badgeClass = 'badge-recepcao';
+          statusIcon = '<i class="fa-solid fa-circle-check"></i>';
+        } else if (c.status === 'Aprovado (Thiago)') {
+          badgeClass = 'badge-aprovado';
+          statusIcon = '<i class="fa-solid fa-lock"></i>';
+        }
+
+        const valBruto = typeof c.total === 'number' ? c.total : parseFloat(String(c.total || 0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+        const valLiq = typeof c.totalLiquido === 'number' ? c.totalLiquido : parseFloat(String(c.totalLiquido || c.total || 0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+
+        sumFat += valBruto;
+        sumLiq += valLiq;
+
+        const btnApprove = (c.status !== 'Aprovado (Thiago)') 
+          ? `<button class="btn-action-approve" onclick="aprovarComanda(${indexReal})"><i class="fa-solid fa-thumbs-up"></i> Aprovar</button>` 
+          : `<span style="color:#2e7d32; font-weight:700; font-size:11px;"><i class="fa-solid fa-check-double"></i> Concluído</span>`;
+
+        const row = `
+          <tr>
+            <td>${c.data}</td>
+            <td><strong>${c.paciente || c.cliente}</strong></td>
+            <td>${c.vendedor || '-'}</td>
+            <td>${c.categoria || '-'}</td>
+            <td><strong>${formatarMoeda(valBruto)}</strong></td>
+            <td style="color: var(--success); font-weight:700;">${formatarMoeda(valLiq)}</td>
+            <td><span class="badge-status ${badgeClass}">${statusIcon} ${c.status || 'Pendente'}</span></td>
+            <td>
+              ${btnApprove}
+              <button class="btn-action-delete" onclick="excluirComanda(${indexReal})"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+
+      atualizarCardsResumo(sumFat, sumLiq);
+    }
+
+    function atualizarCardsResumo(fat, liq) {
+      const taxas = Math.max(0, fat - liq);
+      document.getElementById('total-faturado').innerText = formatarMoeda(fat);
+      document.getElementById('total-taxas').innerText = formatarMoeda(taxas);
+      document.getElementById('total-liquido').innerText = formatarMoeda(liq);
+    }
+
+    async function aprovarComanda(index) {
+      const comanda = comandasDados[index];
+      comanda.status = 'Aprovado (Thiago)';
+
+      if (comanda.id) {
+        await supabaseClient.from('comandas').update({ status: 'Aprovado (Thiago)' }).eq('id', comanda.id);
+      }
+      
+      alert('Comanda de ' + (comanda.paciente || comanda.cliente) + ' aprovada no financeiro!');
+      renderizarTabela();
+    }
+
+    async function excluirComanda(index) {
+      const comanda = comandasDados[index];
+      const cliente = comanda.paciente || comanda.cliente;
+      if (confirm('Tem certeza que deseja apagar a comanda de "' + cliente + '"?')) {
+        if (comanda.id) {
+          await supabaseClient.from('comandas').delete().eq('id', comanda.id);
+        }
+        comandasDados.splice(index, 1);
+        alert('Comanda removida!');
+        renderizarTabela();
+      }
+    }
+  </script>
+</body>
+</html>
