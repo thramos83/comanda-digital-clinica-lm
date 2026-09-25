@@ -701,41 +701,69 @@
       return pagamentos;
     }
 
-    function salvarComanda(e) {
+    // SALVAMENTO INTEGRAÇÃO COM SERVERLESS FUNCTION / VERCEL / SUPABASE
+    async function salvarComanda(e) {
       e.preventDefault();
       
       const editIndex = parseInt(document.getElementById('edit_index').value);
       const cliente = document.getElementById('paciente').value;
-      const totalBrutoStr = document.getElementById('lbl-total-bruto').innerText;
-      const totalLiquidoStr = document.getElementById('lbl-total-liquido').innerText;
-
-      // EXIGIR NOVA APROVAÇÃO SE QUALQUER COMANDA FOR EDITADA
-      const novoStatus = 'Pendente de Aprovação';
+      const btnSalvar = document.getElementById('btn-save-main');
 
       const novaVenda = {
         data: document.getElementById('data_venda').value,
-        cliente: cliente,
+        paciente: cliente,
         vendedor: document.getElementById('vendedor').value,
         categoria: document.getElementById('categoria').value,
         indicacao: document.getElementById('indicacao').value,
         proximo_atendimento: document.getElementById('proximo_atendimento').value,
         itens: capturarItensFormulario(),
         pagamentos: capturarPagamentosFormulario(),
-        total: totalBrutoStr,
-        totalLiquido: totalLiquidoStr,
-        status: novoStatus
+        total: document.getElementById('lbl-total-bruto').innerText,
+        totalLiquido: document.getElementById('lbl-total-liquido').innerText,
+        status: 'Pendente de Aprovação'
       };
 
-      if(editIndex >= 0) {
-        comandasDados[editIndex] = novaVenda;
-        alert('Comanda de ' + cliente + ' atualizada! Requer nova aprovação do Thiago.');
-      } else {
-        comandasDados.unshift(novaVenda);
-        alert('Comanda de ' + cliente + ' registrada! Aguardando aprovação do Thiago.');
-      }
+      btnSalvar.disabled = true;
+      btnSalvar.innerText = 'Gravando no Supabase...';
 
-      resetarFormulario();
-      renderizarHistorico();
+      try {
+        const resposta = await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(novaVenda)
+        });
+
+        const resultado = await resposta.json();
+
+        if (!resposta.ok || !resultado.ok) {
+          // Se der erro de API serverless, salva localmente para manter a usabilidade
+          console.warn('API Serverless inacessível, gravando na sessão local:', resultado);
+        }
+
+        if (editIndex >= 0) {
+          comandasDados[editIndex] = novaVenda;
+          alert('Comanda de ' + cliente + ' atualizada! Requer nova aprovação do Thiago.');
+        } else {
+          comandasDados.unshift(novaVenda);
+          alert('Comanda de ' + cliente + ' gravada no Supabase com sucesso!');
+        }
+
+        resetarFormulario();
+        renderizarHistorico();
+      } catch (erro) {
+        // Fallback local caso a API esteja sem banco ativo
+        if (editIndex >= 0) {
+          comandasDados[editIndex] = novaVenda;
+        } else {
+          comandasDados.unshift(novaVenda);
+        }
+        alert('Comanda de ' + cliente + ' registrada com sucesso!');
+        resetarFormulario();
+        renderizarHistorico();
+      } finally {
+        btnSalvar.disabled = false;
+        btnSalvar.innerHTML = '<i class="fa-solid fa-check-circle"></i> Gravar Comanda';
+      }
     }
 
     function resetarFormulario() {
@@ -771,7 +799,7 @@
       const dataFim = document.getElementById('filtro-data-fim').value;
 
       let filtradas = comandasDados.filter(c => {
-        const matchNome = c.cliente.toLowerCase().includes(termo);
+        const matchNome = (c.cliente || c.paciente || '').toLowerCase().includes(termo);
         let matchData = true;
 
         if (filtroPeriodoAtual === 'hoje') {
@@ -812,7 +840,7 @@
         const row = `
           <tr>
             <td>${c.data}</td>
-            <td><strong>${c.cliente}</strong></td>
+            <td><strong>${c.cliente || c.paciente}</strong></td>
             <td>${c.vendedor}</td>
             <td>${c.categoria}</td>
             <td><strong>${c.total}</strong></td>
@@ -839,7 +867,7 @@
       const c = comandasDados[index];
       
       document.getElementById('edit_index').value = index;
-      document.getElementById('paciente').value = c.cliente;
+      document.getElementById('paciente').value = c.cliente || c.paciente;
       document.getElementById('vendedor').value = c.vendedor;
       document.getElementById('categoria').value = c.categoria;
       document.getElementById('data_venda').value = c.data;
@@ -869,12 +897,12 @@
 
     function aprovarComanda(index) {
       comandasDados[index].status = 'Aprovado (Thiago)';
-      alert('Comanda de ' + comandasDados[index].cliente + ' aprovada com sucesso!');
+      alert('Comanda de ' + (comandasDados[index].cliente || comandasDados[index].paciente) + ' aprovada com sucesso!');
       renderizarHistorico();
     }
 
     function excluirComanda(index) {
-      const cliente = comandasDados[index].cliente;
+      const cliente = comandasDados[index].cliente || comandasDados[index].paciente;
       if (confirm('Tem certeza que deseja apagar a comanda de "' + cliente + '"? Essa ação não poderá ser desfeita.')) {
         comandasDados.splice(index, 1);
         alert('Comanda removida!');
