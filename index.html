@@ -9,91 +9,93 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg-main: #f9f6f0;
-      --bg-card: #ffffff;
-      --sand-light: #f3ece4;
-      --sand-dark: #d8c8b8;
-      --gold-primary: #c5a059;
-      --gold-dark: #8c672f;
-      --text-main: #2c2825;
-      --text-muted: #736b63;
-      --border-color: #e8ded4;
+      /* Paleta Clean, Sofisticada & Premium - Clínica LM */
+      --bg-main: #fcfbfa;           /* Off-white */
+      --bg-card: #ffffff;           /* Branco puro */
+      --sand-light: #f7f4ef;        /* Champagne / Bege suave */
+      --sand-border: #e8e2d9;       /* Borda neutra e leve */
+      --gold-primary: #c5a059;      /* Dourado metálico */
+      --gold-dark: #8c672f;         /* Dourado profundo */
+      --text-main: #3a322d;         /* Marrom aquecido / Moka */
+      --text-muted: #8c827a;       /* Marrom suave */
+      --status-pending: #d97706;    /* Laranja moka para pendente */
+      --status-approved: #2e7d32;   /* Verde veludo para aprovado */
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-    body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 40px; }
+    body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 50px; }
 
     header {
-      background: linear-gradient(135deg, #f5ede4 0%, #ebdcd0 100%);
-      border-bottom: 2px solid var(--sand-dark);
-      padding: 18px 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+      background: linear-gradient(180deg, #f7f4ef 0%, #f2ede4 100%);
+      border-bottom: 1px solid var(--sand-border);
+      padding: 22px 20px;
     }
     .header-container {
-      max-width: 1000px;
+      max-width: 1050px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    .logo-area { display: flex; align-items: center; gap: 15px; }
-    .logo-svg { width: 55px; height: 55px; }
-    .logo-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--gold-dark); letter-spacing: 2px; }
-    .logo-subtitle { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1.5px; }
+    .logo-area { display: flex; align-items: center; gap: 16px; }
+    .logo-svg { width: 50px; height: 50px; }
+    .logo-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--gold-dark); letter-spacing: 2.5px; }
+    .logo-subtitle { font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 2px; }
 
-    .nav-buttons { display: flex; gap: 10px; }
+    .nav-buttons { display: flex; gap: 12px; }
     .btn-nav {
-      background: #ffffff;
-      border: 1px solid var(--sand-dark);
-      color: var(--gold-dark);
-      padding: 9px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--sand-border);
+      color: var(--text-main);
+      padding: 10px 18px;
       border-radius: 8px;
-      font-weight: 600;
-      font-size: 13px;
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.5px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
+      gap: 8px;
+      transition: all 0.25s ease;
     }
-    .btn-nav:hover, .btn-nav.active { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
+    .btn-nav:hover, .btn-nav.active { background: var(--gold-primary); color: #ffffff; border-color: var(--gold-primary); }
 
-    .container { max-width: 1000px; margin: 25px auto; padding: 0 15px; }
+    .container { max-width: 1050px; margin: 30px auto; padding: 0 20px; }
     .card {
       background: var(--bg-card);
-      border-radius: 14px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.03);
-      padding: 28px;
-      margin-bottom: 25px;
+      border-radius: 16px;
+      border: 1px solid var(--sand-border);
+      box-shadow: 0 10px 30px rgba(58,50,45,0.03);
+      padding: 32px;
+      margin-bottom: 30px;
     }
     .card-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
+      font-size: 24px;
+      font-weight: 700;
       color: var(--gold-dark);
-      margin-bottom: 20px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--sand-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group.full { grid-column: 1 / -1; }
     
-    label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
+    label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; }
     input, select, textarea {
       width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border-color);
+      padding: 11px 14px;
+      border: 1px solid var(--sand-border);
       border-radius: 8px;
       font-size: 13px;
-      background-color: #faf7f2;
+      background-color: var(--sand-light);
       color: var(--text-main);
       outline: none;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
     
     input[type="date"], #data_venda { text-align: center; }
@@ -101,17 +103,26 @@
     input:focus, select:focus, textarea:focus { 
       border-color: var(--gold-primary); 
       background-color: #ffffff; 
-      box-shadow: 0 0 0 3px rgba(197,160,89,0.15); 
+      box-shadow: 0 0 0 3px rgba(197,160,89,0.12); 
     }
 
-    /* Tabelas Dinâmicas estilo Venda Personalizada */
-    .section-block { margin-top: 25px; padding-top: 15px; border-top: 1px dashed var(--border-color); }
-    .section-block-title { font-size: 14px; font-weight: 700; color: var(--gold-dark); margin-bottom: 12px; }
+    /* Tabelas Dinâmicas de Itens com Rótulos Visíveis */
+    .section-block { margin-top: 28px; padding-top: 18px; border-top: 1px dashed var(--sand-border); }
+    .section-block-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--gold-dark); letter-spacing: 1px; margin-bottom: 14px; }
+
+    .labels-header {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1.5fr 1.5fr 1.5fr 40px;
+      gap: 10px;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+    .labels-header span { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
 
     .dynamic-row {
       display: grid;
       grid-template-columns: 3fr 1fr 1.5fr 1.5fr 1.5fr 40px;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
       margin-bottom: 10px;
     }
@@ -119,91 +130,120 @@
     .payment-row {
       display: grid;
       grid-template-columns: 1.5fr 2fr 1.5fr 1.5fr 1.5fr 40px;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
       margin-bottom: 10px;
     }
 
     .btn-add-item {
-      background: none;
-      border: none;
+      background: var(--sand-light);
+      border: 1px solid var(--sand-border);
       color: var(--gold-dark);
       font-weight: 600;
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 8px;
-      padding: 6px 12px;
-      border-radius: 6px;
-      background-color: #faf7f2;
-      border: 1px solid var(--border-color);
+      margin-top: 10px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s;
     }
-    .btn-add-item:hover { background-color: var(--sand-light); }
+    .btn-add-item:hover { background-color: var(--sand-border); }
 
     .btn-remove-row {
       background: none;
       border: none;
       color: #c65911;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       text-align: center;
     }
 
-    /* Resumo do Rodapé */
+    /* Resumo de Totais */
     .totals-summary {
-      background-color: #faf7f2;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 16px;
-      margin-top: 25px;
+      background-color: var(--sand-light);
+      border: 1px solid var(--sand-border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 28px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
     }
-    .total-line { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); }
-    .total-line.main { font-size: 18px; font-weight: 700; color: var(--gold-dark); border-top: 1px solid var(--border-color); padding-top: 8px; margin-top: 4px; }
+    .total-line { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-muted); }
+    .total-line.main { font-size: 18px; font-weight: 700; color: var(--gold-dark); border-top: 1px solid var(--sand-border); padding-top: 10px; margin-top: 6px; }
 
     .btn-submit {
       background: linear-gradient(135deg, #c5a059 0%, #8c672f 100%);
-      color: #fff;
+      color: #ffffff;
       border: none;
-      padding: 15px;
+      padding: 16px;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 15px;
+      font-size: 14px;
+      letter-spacing: 0.5px;
       width: 100%;
       cursor: pointer;
-      margin-top: 20px;
-      box-shadow: 0 4px 12px rgba(140,103,47,0.25);
-      transition: all 0.2s;
+      margin-top: 22px;
+      box-shadow: 0 4px 15px rgba(140,103,47,0.2);
+      transition: all 0.2s ease;
     }
-    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(140,103,47,0.35); }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(140,103,47,0.3); }
 
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* Cards do Resumo no Histórico */
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 22px; }
-    .summary-card { background: #faf7f2; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; text-align: center; }
-    .summary-card .title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
-    .summary-card .value { font-size: 20px; font-weight: 700; color: var(--gold-dark); margin-top: 6px; }
+    /* Histórico e Edição */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 25px; }
+    .summary-card { background: var(--sand-light); border: 1px solid var(--sand-border); border-radius: 12px; padding: 18px; text-align: center; }
+    .summary-card .title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
+    .summary-card .value { font-size: 22px; font-weight: 700; color: var(--gold-dark); margin-top: 6px; }
 
-    /* Barra de Busca */
-    .filter-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; align-items: center; }
-    .filter-bar input, .filter-bar select { flex: 1; min-width: 180px; }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; align-items: center; }
 
-    /* Tabela Responsiva */
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 700px; }
-    th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); }
-    th { background-color: #faf7f2; color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 11px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 750px; }
+    th, td { padding: 14px; text-align: center; border-bottom: 1px solid var(--sand-border); }
+    th { background-color: var(--sand-light); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.8px; }
+
+    .badge-status {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-pendente { background-color: #fef3c7; color: #b45309; }
+    .badge-aprovado { background-color: #dcfce7; color: #15803d; }
+
+    .btn-action-edit {
+      background: var(--sand-light);
+      border: 1px solid var(--sand-border);
+      color: var(--gold-dark);
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .btn-action-approve {
+      background: var(--gold-primary);
+      border: none;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+    }
 
     @media (max-width: 768px) {
-      .dynamic-row { grid-template-columns: 1fr 1fr; gap: 6px; }
-      .payment-row { grid-template-columns: 1fr 1fr; gap: 6px; }
-      .header-container { flex-direction: column; gap: 15px; text-align: center; }
+      .dynamic-row, .payment-row, .labels-header { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .labels-header { display: none; }
+      .header-container { flex-direction: column; gap: 16px; text-align: center; }
       .logo-area { flex-direction: column; }
     }
   </style>
@@ -238,17 +278,21 @@
 
   <div class="container">
     
-    <!-- ABA NOVA VENDA PERSONALIZADA -->
+    <!-- ABA NOVA VENDA / EDITAR COMANDA -->
     <div id="tab-comanda" class="tab-content active">
       <div class="card">
-        <div class="card-title">Nova Venda Personalizada</div>
+        <div class="card-title">
+          <span id="form-title">Nova Venda Personalizada</span>
+          <small id="edit-indicator" style="display:none; font-size:12px; color: var(--gold-dark); font-family:'Montserrat';">(Modo Edição)</small>
+        </div>
         
         <form id="formComanda" onsubmit="salvarComanda(event)">
-          <!-- Cabeçalho Principal -->
+          <input type="hidden" id="edit_index" value="-1">
+
           <div class="form-grid">
             <div class="form-group">
               <label>Cliente / Paciente *</label>
-              <input type="text" id="paciente" required placeholder="Pesquise ou Digite o nome">
+              <input type="text" id="paciente" required placeholder="Nome completo do paciente">
             </div>
             <div class="form-group">
               <label>Vendedor / Profissional *</label>
@@ -264,9 +308,9 @@
             <div class="form-group">
               <label>Categoria *</label>
               <select id="categoria">
-                <option value="ATENDIMENTOS">ATENDIMENTOS</option>
-                <option value="HOME CARE">HOME CARE</option>
-                <option value="COMBINADO">COMBINADO</option>
+                <option value="Atendimento">Atendimento</option>
+                <option value="Venda">Venda</option>
+                <option value="Venda Profissional">Venda Profissional</option>
               </select>
             </div>
             <div class="form-group">
@@ -285,30 +329,50 @@
               </select>
             </div>
             <div class="form-group">
-              <label>Descrição</label>
-              <input type="text" id="descricao" value="Venda personalizada">
+              <label>Próximo Atendimento</label>
+              <input type="text" id="proximo_atendimento" placeholder="Ex: Retorno em 15 dias (10/10 às 14h)">
             </div>
           </div>
 
-          <!-- BLOCO 1: PROCEDIMENTOS / PRODUTOS DINÂMICOS -->
+          <!-- BLOCO 1: PROCEDIMENTOS / PRODUTOS -->
           <div class="section-block">
             <div class="section-block-title">Procedimentos / Produtos</div>
+            
+            <div class="labels-header">
+              <span>Nome / Descrição do Item</span>
+              <span>Qtd</span>
+              <span>Valor Unit. (R$)</span>
+              <span>Desconto (R$)</span>
+              <span>Total Item (R$)</span>
+              <span></span>
+            </div>
+
             <div id="items-container"></div>
             <button type="button" class="btn-add-item" onclick="addItemRow()">
-              <i class="fa-solid fa-plus"></i> Adicionar Procedimentos/Produtos
+              <i class="fa-solid fa-plus"></i> Adicionar Procedimento/Produto
             </button>
           </div>
 
           <!-- BLOCO 2: RECEBIMENTO FRACIONADO -->
           <div class="section-block">
             <div class="section-block-title">Recebimento (Múltiplas Formas)</div>
+            
+            <div class="labels-header">
+              <span>Valor (R$)</span>
+              <span>Método / Bandeira</span>
+              <span>Conta Destino</span>
+              <span>Vencimento</span>
+              <span>Parcelas</span>
+              <span></span>
+            </div>
+
             <div id="payments-container"></div>
             <button type="button" class="btn-add-item" onclick="addPaymentRow()">
               <i class="fa-solid fa-plus"></i> Adicionar Forma de Pagamento
             </button>
           </div>
 
-          <!-- BLOCO 3: RESUMO DE VALORES E TAXAS -->
+          <!-- BLOCO 3: TOTALIZADORES -->
           <div class="totals-summary">
             <div class="total-line">
               <span>Total Bruto:</span>
@@ -316,7 +380,7 @@
             </div>
             <div class="total-line">
               <span>Taxas de Maquininha (R$):</span>
-              <input type="number" step="0.01" id="taxas_maquininha" value="0.00" style="width: 100px; text-align: right;" oninput="calcularGeral()">
+              <input type="number" step="0.01" id="taxas_maquininha" value="0.00" style="width: 110px; text-align: right;" oninput="calcularGeral()">
             </div>
             <div class="total-line main">
               <span>Total Líquido:</span>
@@ -324,12 +388,12 @@
             </div>
           </div>
 
-          <button type="submit" class="btn-submit"><i class="fa-solid fa-check-circle"></i> Salvar Venda</button>
+          <button type="submit" class="btn-submit" id="btn-save-main"><i class="fa-solid fa-check-circle"></i> Gravar Comanda</button>
         </form>
       </div>
     </div>
 
-    <!-- ABA HISTÓRICO / RECEPÇÃO -->
+    <!-- ABA HISTÓRICO / RECEPÇÃO / FINANCEIRO -->
     <div id="tab-historico" class="tab-content">
       <div class="summary-grid">
         <div class="summary-card">
@@ -343,7 +407,7 @@
       </div>
 
       <div class="card">
-        <div class="card-title">Vendas Registradas</div>
+        <div class="card-title">Comandas Registradas</div>
         <div class="filter-bar">
           <input type="text" id="search-paciente" placeholder="🔍 Buscar cliente..." onkeyup="filtrarComandas()">
         </div>
@@ -356,11 +420,12 @@
                 <th>Vendedor</th>
                 <th>Categoria</th>
                 <th>Valor Total</th>
-                <th>Pagamentos</th>
+                <th>Status</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody id="lista-comandas-body">
-              <tr><td colspan="6" style="text-align:center;">Nenhuma venda gravada ainda.</td></tr>
+              <tr><td colspan="7" style="text-align:center; color: var(--text-muted);">Nenhuma comanda gravada ainda.</td></tr>
             </tbody>
           </table>
         </div>
@@ -373,7 +438,6 @@
     document.getElementById('data_venda').valueAsDate = new Date();
     let comandasDados = [];
 
-    // Inicialização das linhas dinâmicas
     window.onload = function() {
       addItemRow();
       addPaymentRow();
@@ -386,51 +450,48 @@
       if(btn) btn.classList.add('active');
     }
 
-    // Gerenciador de Itens (Procedimentos/Produtos)
-    function addItemRow() {
+    function addItemRow(nome = '', qtd = 1, valor = '0.00', desc = '0.00') {
       const container = document.getElementById('items-container');
       const div = document.createElement('div');
       div.className = 'dynamic-row';
       div.innerHTML = `
-        <input type="text" placeholder="Nome do item / procedimento" class="item-nome" required>
-        <input type="number" placeholder="Qtd" class="item-qtd" value="1" min="1" oninput="calcularGeral()">
-        <input type="number" step="0.01" placeholder="Valor (R$)" class="item-valor" value="0.00" oninput="calcularGeral()">
-        <input type="number" step="0.01" placeholder="Desc. (R$)" class="item-desc" value="0.00" oninput="calcularGeral()">
-        <input type="number" step="0.01" placeholder="Total (R$)" class="item-total" value="0.00" readonly>
+        <input type="text" placeholder="Procedimento ou Produto" class="item-nome" value="${nome}" required>
+        <input type="number" placeholder="Qtd" class="item-qtd" value="${qtd}" min="1" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Valor" class="item-valor" value="${valor}" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Desc." class="item-desc" value="${desc}" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Total" class="item-total" value="0.00" readonly>
         <button type="button" class="btn-remove-row" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
       `;
       container.appendChild(div);
       calcularGeral();
     }
 
-    // Gerenciador de Recebimentos Fracionados
-    function addPaymentRow() {
+    function addPaymentRow(valor = '0.00', metodo = 'Outras bandeiras', conta = 'ITAÚ', parcelas = 'A vista') {
       const container = document.getElementById('payments-container');
       const div = document.createElement('div');
       div.className = 'payment-row';
       div.innerHTML = `
-        <input type="number" step="0.01" placeholder="Valor (R$)" class="pay-valor" value="0.00" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Valor" class="pay-valor" value="${valor}" oninput="calcularGeral()">
         <select class="pay-metodo">
-          <option value="Outras bandeiras">Outras bandeiras</option>
-          <option value="Visa">Visa</option>
-          <option value="Mastercard">Mastercard</option>
-          <option value="PIX">PIX</option>
-          <option value="Dinheiro">Dinheiro</option>
+          <option value="Outras bandeiras" ${metodo==='Outras bandeiras'?'selected':''}>Outras bandeiras</option>
+          <option value="Visa" ${metodo==='Visa'?'selected':''}>Visa</option>
+          <option value="Mastercard" ${metodo==='Mastercard'?'selected':''}>Mastercard</option>
+          <option value="PIX" ${metodo==='PIX'?'selected':''}>PIX</option>
+          <option value="Dinheiro" ${metodo==='Dinheiro'?'selected':''}>Dinheiro</option>
         </select>
         <select class="pay-conta">
-          <option value="ITAÚ">ITAÚ</option>
-          <option value="INTER">INTER</option>
-          <option value="CAIXINHA">CAIXINHA</option>
+          <option value="ITAÚ" ${conta==='ITAÚ'?'selected':''}>ITAÚ</option>
+          <option value="INTER" ${conta==='INTER'?'selected':''}>INTER</option>
+          <option value="CAIXINHA" ${conta==='CAIXINHA'?'selected':''}>CAIXINHA</option>
         </select>
         <input type="date" class="pay-vencimento">
         <select class="pay-parcelas">
-          <option value="A vista">A vista</option>
-          <option value="2x">2x</option>
-          <option value="3x">3x</option>
-          <option value="4x">4x</option>
-          <option value="6x">6x</option>
-          <option value="10x">10x</option>
-          <option value="12x">12x</option>
+          <option value="A vista" ${parcelas==='A vista'?'selected':''}>A vista</option>
+          <option value="2x" ${parcelas==='2x'?'selected':''}>2x</option>
+          <option value="3x" ${parcelas==='3x'?'selected':''}>3x</option>
+          <option value="4x" ${parcelas==='4x'?'selected':''}>4x</option>
+          <option value="6x" ${parcelas==='6x'?'selected':''}>6x</option>
+          <option value="12x" ${parcelas==='12x'?'selected':''}>12x</option>
         </select>
         <button type="button" class="btn-remove-row" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
       `;
@@ -444,17 +505,13 @@
       calcularGeral();
     }
 
-    // Cálculo Global de Valores
     function calcularGeral() {
       let totalBruto = 0;
-
-      // Soma dos itens
       document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
         const qtd = parseFloat(row.querySelector('.item-qtd').value) || 0;
         const val = parseFloat(row.querySelector('.item-valor').value) || 0;
         const desc = parseFloat(row.querySelector('.item-desc').value) || 0;
         const subtotal = Math.max(0, (qtd * val) - desc);
-        
         row.querySelector('.item-total').value = subtotal.toFixed(2);
         totalBruto += subtotal;
       });
@@ -469,6 +526,7 @@
     function salvarComanda(e) {
       e.preventDefault();
       
+      const editIndex = parseInt(document.getElementById('edit_index').value);
       const cliente = document.getElementById('paciente').value;
       const totalBrutoStr = document.getElementById('lbl-total-bruto').innerText;
 
@@ -477,19 +535,35 @@
         cliente: cliente,
         vendedor: document.getElementById('vendedor').value,
         categoria: document.getElementById('categoria').value,
-        total: totalBrutoStr
+        indicacao: document.getElementById('indicacao').value,
+        proximo_atendimento: document.getElementById('proximo_atendimento').value,
+        total: totalBrutoStr,
+        status: editIndex >= 0 ? comandasDados[editIndex].status : 'Pendente de Aprovação'
       };
 
-      comandasDados.unshift(novaVenda);
-      alert('Venda para ' + cliente + ' gravada com sucesso!');
-      
+      if(editIndex >= 0) {
+        comandasDados[editIndex] = novaVenda;
+        alert('Comanda de ' + cliente + ' atualizada!');
+      } else {
+        comandasDados.unshift(novaVenda);
+        alert('Comanda de ' + cliente + ' registrada! Aguardando aprovação final do Thiago.');
+      }
+
+      resetarFormulario();
+      renderizarHistorico();
+    }
+
+    function resetarFormulario() {
       document.getElementById('formComanda').reset();
+      document.getElementById('edit_index').value = "-1";
+      document.getElementById('form-title').innerText = "Nova Venda Personalizada";
+      document.getElementById('edit-indicator').style.display = "none";
+      document.getElementById('btn-save-main').innerHTML = '<i class="fa-solid fa-check-circle"></i> Gravar Comanda';
       document.getElementById('data_venda').valueAsDate = new Date();
       document.getElementById('items-container').innerHTML = '';
       document.getElementById('payments-container').innerHTML = '';
       addItemRow();
       addPaymentRow();
-      renderizarHistorico();
     }
 
     function renderizarHistorico() {
@@ -497,11 +571,12 @@
       tbody.innerHTML = '';
 
       if(comandasDados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhuma venda gravada ainda.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma comanda gravada ainda.</td></tr>';
         return;
       }
 
-      comandasDados.forEach(c => {
+      comandasDados.forEach((c, idx) => {
+        const badgeClass = c.status === 'Aprovado (Thiago)' ? 'badge-aprovado' : 'badge-pendente';
         const row = `
           <tr>
             <td>${c.data}</td>
@@ -509,7 +584,62 @@
             <td>${c.vendedor}</td>
             <td>${c.categoria}</td>
             <td><strong>${c.total}</strong></td>
-            <td><span style="color: #2e7d32; font-weight:600;">Concluído</span></td>
+            <td><span class="badge-status ${badgeClass}">${c.status}</span></td>
+            <td>
+              <button class="btn-action-edit" onclick="editarComanda(${idx})"><i class="fa-solid fa-pen"></i> Editar</button>
+              ${c.status !== 'Aprovado (Thiago)' ? `<button class="btn-action-approve" onclick="aprovarComanda(${idx})"><i class="fa-solid fa-check"></i> Aprovar</button>` : ''}
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function editarComanda(index) {
+      const c = comandasDados[index];
+      document.getElementById('edit_index').value = index;
+      document.getElementById('paciente').value = c.cliente;
+      document.getElementById('vendedor').value = c.vendedor;
+      document.getElementById('categoria').value = c.categoria;
+      document.getElementById('data_venda').value = c.data;
+      document.getElementById('indicacao').value = c.indicacao || '';
+      document.getElementById('proximo_atendimento').value = c.proximo_atendimento || '';
+
+      document.getElementById('form-title').innerText = "Editar Comanda";
+      document.getElementById('edit-indicator').style.display = "inline";
+      document.getElementById('btn-save-main').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Alterações';
+
+      switchTab('comanda', document.querySelectorAll('.btn-nav')[0]);
+    }
+
+    function aprovarComanda(index) {
+      comandasDados[index].status = 'Aprovado (Thiago)';
+      alert('Comanda aprovada com sucesso por Thiago!');
+      renderizarHistorico();
+    }
+
+    function filtrarComandas() {
+      const termo = document.getElementById('search-paciente').value.toLowerCase();
+      const filtradas = comandasDados.filter(c => c.cliente.toLowerCase().includes(termo));
+      renderizarHistoricoFiltrado(filtradas);
+    }
+
+    function renderizarHistoricoFiltrado(dados) {
+      const tbody = document.getElementById('lista-comandas-body');
+      tbody.innerHTML = '';
+      dados.forEach((c, idx) => {
+        const badgeClass = c.status === 'Aprovado (Thiago)' ? 'badge-aprovado' : 'badge-pendente';
+        const row = `
+          <tr>
+            <td>${c.data}</td>
+            <td><strong>${c.cliente}</strong></td>
+            <td>${c.vendedor}</td>
+            <td>${c.categoria}</td>
+            <td><strong>${c.total}</strong></td>
+            <td><span class="badge-status ${badgeClass}">${c.status}</span></td>
+            <td>
+              <button class="btn-action-edit" onclick="editarComanda(${idx})"><i class="fa-solid fa-pen"></i> Editar</button>
+            </td>
           </tr>
         `;
         tbody.innerHTML += row;
