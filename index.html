@@ -9,16 +9,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --bg-main: #fcfbfa;           /* Off-white */
-      --bg-card: #ffffff;           /* Branco puro */
-      --sand-light: #f7f4ef;        /* Champagne / Bege suave */
-      --sand-border: #e8e2d9;       /* Borda neutra e leve */
-      --gold-primary: #c5a059;      /* Dourado metálico */
-      --gold-dark: #8c672f;         /* Dourado profundo */
-      --text-main: #3a322d;         /* Marrom aquecido / Moka */
-      --text-muted: #8c827a;       /* Marrom suave */
+      --bg-main: #fcfbfa;
+      --bg-card: #ffffff;
+      --sand-light: #f7f4ef;
+      --sand-border: #e8e2d9;
+      --gold-primary: #c5a059;
+      --gold-dark: #8c672f;
+      --text-main: #3a322d;
+      --text-muted: #8c827a;
       --danger: #c65911;
-      --danger-soft: #fce4d6;
+      --info-blue: #2563eb;
+      --info-blue-bg: #dbeafe;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
@@ -254,24 +255,40 @@
     .btn-filter-quick.active, .btn-filter-quick:hover { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
 
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 800px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 850px; }
     th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--sand-border); }
     th { background-color: var(--sand-light); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.8px; }
 
     .badge-status {
-      padding: 4px 10px;
+      padding: 5px 10px;
       border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
+      font-size: 10px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
-    .badge-pendente { background-color: #fef3c7; color: #b45309; }
+    .badge-cabine { background-color: #fef3c7; color: #b45309; }
+    .badge-recepcao { background-color: var(--info-blue-bg); color: var(--info-blue); }
     .badge-aprovado { background-color: #dcfce7; color: #15803d; }
 
     .btn-action-edit {
       background: var(--sand-light);
       border: 1px solid var(--sand-border);
       color: var(--gold-dark);
-      padding: 5px 10px;
+      padding: 5px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      margin-right: 2px;
+    }
+
+    .btn-action-check {
+      background: var(--info-blue);
+      border: none;
+      color: #fff;
+      padding: 5px 9px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
@@ -283,7 +300,7 @@
       background: var(--gold-primary);
       border: none;
       color: #fff;
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
@@ -295,7 +312,7 @@
       background: #fef2f2;
       border: 1px solid #fecaca;
       color: #dc2626;
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
@@ -627,7 +644,7 @@
       calcularGeral();
     }
 
-    // CÁLCULO GERAL COM DESCONTO AUTOMÁTICO DAS TAXAS REDE
+    // CÁLCULO GERAL
     function calcularGeral() {
       let totalBruto = 0;
       document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
@@ -720,7 +737,7 @@
         pagamentos: capturarPagamentosFormulario(),
         total: document.getElementById('lbl-total-bruto').innerText,
         totalLiquido: document.getElementById('lbl-total-liquido').innerText,
-        status: 'Pendente de Aprovação'
+        status: 'Lançado pela Cabine'
       };
 
       btnSalvar.disabled = true;
@@ -735,23 +752,17 @@
 
         const resultado = await resposta.json();
 
-        if (!resposta.ok || !resultado.ok) {
-          // Se der erro de API serverless, salva localmente para manter a usabilidade
-          console.warn('API Serverless inacessível, gravando na sessão local:', resultado);
-        }
-
         if (editIndex >= 0) {
           comandasDados[editIndex] = novaVenda;
-          alert('Comanda de ' + cliente + ' atualizada! Requer nova aprovação do Thiago.');
+          alert('Comanda de ' + cliente + ' atualizada! Retornou para o status de conferência da recepção.');
         } else {
           comandasDados.unshift(novaVenda);
-          alert('Comanda de ' + cliente + ' gravada no Supabase com sucesso!');
+          alert('Comanda de ' + cliente + ' gravada no Supabase! Enviada para a recepção.');
         }
 
         resetarFormulario();
         renderizarHistorico();
       } catch (erro) {
-        // Fallback local caso a API esteja sem banco ativo
         if (editIndex >= 0) {
           comandasDados[editIndex] = novaVenda;
         } else {
@@ -823,7 +834,16 @@
 
       filtradas.forEach((c) => {
         const indexReal = comandasDados.indexOf(c);
-        const badgeClass = c.status === 'Aprovado (Thiago)' ? 'badge-aprovado' : 'badge-pendente';
+
+        let badgeClass = 'badge-cabine';
+        let statusIcon = '<i class="fa-solid fa-clock"></i>';
+        if (c.status === 'Pagamento Conferido (Recepção)') {
+          badgeClass = 'badge-recepcao';
+          statusIcon = '<i class="fa-solid fa-circle-check"></i>';
+        } else if (c.status === 'Aprovado (Thiago)') {
+          badgeClass = 'badge-aprovado';
+          statusIcon = '<i class="fa-solid fa-lock"></i>';
+        }
 
         const valBruto = parseFloat(c.total.replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
         const valLiq = parseFloat((c.totalLiquido || c.total).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
@@ -831,9 +851,15 @@
         sumFat += valBruto;
         sumLiq += valLiq;
 
-        const btnApprove = (userRole === 'admin' && c.status !== 'Aprovado (Thiago)') 
-          ? `<button class="btn-action-approve" onclick="aprovarComanda(${indexReal})"><i class="fa-solid fa-check"></i> Aprovar</button>` : '';
+        // BOTÃO CHECK DA RECEPÇÃO
+        const btnCheckRecepcao = (c.status === 'Lançado pela Cabine') 
+          ? `<button class="btn-action-check" onclick="checkRecepcao(${indexReal})"><i class="fa-solid fa-check-double"></i> Check Recepção</button>` : '';
 
+        // BOTÃO APROVAR DO THIAGO
+        const btnApprove = (userRole === 'admin' && c.status !== 'Aprovado (Thiago)') 
+          ? `<button class="btn-action-approve" onclick="aprovarComanda(${indexReal})"><i class="fa-solid fa-thumbs-up"></i> Aprovar Thiago</button>` : '';
+
+        // BOTÃO EXCLUIR DO THIAGO
         const btnDelete = (userRole === 'admin') 
           ? `<button class="btn-action-delete" onclick="excluirComanda(${indexReal})"><i class="fa-solid fa-trash"></i> Apagar</button>` : '';
 
@@ -844,9 +870,10 @@
             <td>${c.vendedor}</td>
             <td>${c.categoria}</td>
             <td><strong>${c.total}</strong></td>
-            <td><span class="badge-status ${badgeClass}">${c.status}</span></td>
+            <td><span class="badge-status ${badgeClass}">${statusIcon} ${c.status}</span></td>
             <td>
               <button class="btn-action-edit" onclick="editarComanda(${indexReal})"><i class="fa-solid fa-pen"></i> Editar</button>
+              ${btnCheckRecepcao}
               ${btnApprove}
               ${btnDelete}
             </td>
@@ -895,9 +922,15 @@
       switchTab('comanda', document.querySelectorAll('.btn-nav')[0]);
     }
 
+    function checkRecepcao(index) {
+      comandasDados[index].status = 'Pagamento Conferido (Recepção)';
+      alert('Conferência realizada! Comanda marcada como "Pagamento Conferido".');
+      renderizarHistorico();
+    }
+
     function aprovarComanda(index) {
       comandasDados[index].status = 'Aprovado (Thiago)';
-      alert('Comanda de ' + (comandasDados[index].cliente || comandasDados[index].paciente) + ' aprovada com sucesso!');
+      alert('Comanda de ' + (comandasDados[index].cliente || comandasDados[index].paciente) + ' aprovada no financeiro!');
       renderizarHistorico();
     }
 
