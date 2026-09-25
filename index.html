@@ -37,7 +37,6 @@
       align-items: center;
     }
     .logo-area { display: flex; align-items: center; gap: 15px; }
-    
     .logo-svg { width: 55px; height: 55px; }
     .logo-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--gold-dark); letter-spacing: 2px; }
     .logo-subtitle { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1.5px; }
@@ -70,36 +69,34 @@
     }
     .card-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 24px;
+      font-size: 22px;
       color: var(--gold-dark);
-      margin-bottom: 22px;
-      padding-bottom: 10px;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
     }
 
-    /* Grid com margens e alinhamentos simétricos */
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full { grid-column: 1 / -1; }
     
     label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
     input, select, textarea {
       width: 100%;
-      padding: 11px 14px;
+      padding: 10px 12px;
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 13px;
       background-color: #faf7f2;
       color: var(--text-main);
       outline: none;
       transition: all 0.2s;
     }
     
-    /* Centralização da Data */
-    input[type="date"], #data { text-align: center; }
+    input[type="date"], #data_venda { text-align: center; }
 
     input:focus, select:focus, textarea:focus { 
       border-color: var(--gold-primary); 
@@ -107,19 +104,66 @@
       box-shadow: 0 0 0 3px rgba(197,160,89,0.15); 
     }
 
-    .card-flags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-    .flag-opt {
-      padding: 8px 14px;
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      font-size: 12px;
-      cursor: pointer;
-      background: #faf7f2;
-      font-weight: 600;
-      color: var(--text-main);
-      transition: all 0.2s;
+    /* Tabelas Dinâmicas estilo Venda Personalizada */
+    .section-block { margin-top: 25px; padding-top: 15px; border-top: 1px dashed var(--border-color); }
+    .section-block-title { font-size: 14px; font-weight: 700; color: var(--gold-dark); margin-bottom: 12px; }
+
+    .dynamic-row {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1.5fr 1.5fr 1.5fr 40px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
     }
-    .flag-opt.selected { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
+
+    .payment-row {
+      display: grid;
+      grid-template-columns: 1.5fr 2fr 1.5fr 1.5fr 1.5fr 40px;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .btn-add-item {
+      background: none;
+      border: none;
+      color: var(--gold-dark);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      background-color: #faf7f2;
+      border: 1px solid var(--border-color);
+    }
+    .btn-add-item:hover { background-color: var(--sand-light); }
+
+    .btn-remove-row {
+      background: none;
+      border: none;
+      color: #c65911;
+      cursor: pointer;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    /* Resumo do Rodapé */
+    .totals-summary {
+      background-color: #faf7f2;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+      margin-top: 25px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .total-line { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); }
+    .total-line.main { font-size: 18px; font-weight: 700; color: var(--gold-dark); border-top: 1px solid var(--border-color); padding-top: 8px; margin-top: 4px; }
 
     .btn-submit {
       background: linear-gradient(135deg, #c5a059 0%, #8c672f 100%);
@@ -140,72 +184,25 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* Cards do Resumo Financeiro */
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 22px;
-    }
-    .summary-card {
-      background: #faf7f2;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 16px;
-      text-align: center;
-    }
+    /* Cards do Resumo no Histórico */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 22px; }
+    .summary-card { background: #faf7f2; border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; text-align: center; }
     .summary-card .title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
     .summary-card .value { font-size: 20px; font-weight: 700; color: var(--gold-dark); margin-top: 6px; }
 
-    /* Barra de Busca e Filtros */
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 20px;
-      align-items: center;
-    }
+    /* Barra de Busca */
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; align-items: center; }
     .filter-bar input, .filter-bar select { flex: 1; min-width: 180px; }
-    .btn-quick-filter {
-      padding: 10px 14px;
-      background: #ffffff;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--text-main);
-      transition: all 0.2s;
-    }
-    .btn-quick-filter:hover, .btn-quick-filter.active { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
 
-    /* Tabela Responsiva com Alinhamento Perfeito */
+    /* Tabela Responsiva */
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 700px; }
     th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border-color); }
     th { background-color: #faf7f2; color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 11px; }
 
-    .badge-status {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-    .badge-pago { background-color: #e2f0d9; color: #385723; }
-    .badge-pendente { background-color: #fce4d6; color: #c65911; }
-
-    .btn-action {
-      background: none;
-      border: none;
-      color: var(--gold-dark);
-      cursor: pointer;
-      font-size: 15px;
-      padding: 4px;
-    }
-
-    .total-highlight { background-color: #f3ece4; font-weight: bold; color: var(--gold-dark); }
-
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
+      .dynamic-row { grid-template-columns: 1fr 1fr; gap: 6px; }
+      .payment-row { grid-template-columns: 1fr 1fr; gap: 6px; }
       .header-container { flex-direction: column; gap: 15px; text-align: center; }
       .logo-area { flex-direction: column; }
     }
@@ -233,181 +230,137 @@
         </div>
       </div>
       <div class="nav-buttons">
-        <button class="btn-nav active" onclick="switchTab('comanda', this)"><i class="fa-solid fa-pen-to-square"></i> Nova Comanda</button>
-        <button class="btn-nav" onclick="switchTab('historico', this)"><i class="fa-solid fa-list-check"></i> Recepção / Financeiro</button>
+        <button class="btn-nav active" onclick="switchTab('comanda', this)"><i class="fa-solid fa-plus-circle"></i> Nova Venda / Comanda</button>
+        <button class="btn-nav" onclick="switchTab('historico', this)"><i class="fa-solid fa-receipt"></i> Recepção / Financeiro</button>
       </div>
     </div>
   </header>
 
   <div class="container">
     
-    <!-- ABA NOVA COMANDA -->
+    <!-- ABA NOVA VENDA PERSONALIZADA -->
     <div id="tab-comanda" class="tab-content active">
       <div class="card">
-        <div class="card-title"><i class="fa-solid fa-file-invoice"></i> Dados do Atendimento</div>
+        <div class="card-title">Nova Venda Personalizada</div>
+        
         <form id="formComanda" onsubmit="salvarComanda(event)">
+          <!-- Cabeçalho Principal -->
           <div class="form-grid">
             <div class="form-group">
-              <label>Paciente *</label>
-              <input type="text" id="paciente" required placeholder="Nome completo do paciente">
+              <label>Cliente / Paciente *</label>
+              <input type="text" id="paciente" required placeholder="Pesquise ou Digite o nome">
             </div>
             <div class="form-group">
-              <label>Data *</label>
-              <input type="date" id="data" required>
-            </div>
-            <div class="form-group">
-              <label>Profissional Responsável *</label>
-              <select id="profissional" required>
+              <label>Vendedor / Profissional *</label>
+              <select id="vendedor" required>
                 <option value="">Selecione...</option>
-                <option value="Dra. Lorena">Dra. Lorena</option>
-                <option value="Dra. Fatyene">Dra. Fatyene</option>
-                <option value="Dra. Camila">Dra. Camila</option>
-                <option value="Alê Cardoso">Alê Cardoso</option>
-                <option value="Letycia">Letycia</option>
+                <option value="LORENA MACEDO">LORENA MACEDO</option>
+                <option value="DRA. FATYENE">DRA. FATYENE</option>
+                <option value="DRA. CAMILA">DRA. CAMILA</option>
+                <option value="ALÊ CARDOSO">ALÊ CARDOSO</option>
+                <option value="LETYCIA">LETYCIA</option>
               </select>
+            </div>
+            <div class="form-group">
+              <label>Categoria *</label>
+              <select id="categoria">
+                <option value="ATENDIMENTOS">ATENDIMENTOS</option>
+                <option value="HOME CARE">HOME CARE</option>
+                <option value="COMBINADO">COMBINADO</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Data da Venda *</label>
+              <input type="date" id="data_venda" required>
             </div>
             <div class="form-group">
               <label>Indicação</label>
               <select id="indicacao">
                 <option value="">Nenhuma / Outra</option>
-                <option value="Dra. Lorena">Dra. Lorena</option>
-                <option value="Dra. Fatyene">Dra. Fatyene</option>
-                <option value="Dra. Camila">Dra. Camila</option>
-                <option value="Alê Cardoso">Alê Cardoso</option>
-                <option value="Letycia">Letycia</option>
+                <option value="LORENA MACEDO">LORENA MACEDO</option>
+                <option value="DRA. FATYENE">DRA. FATYENE</option>
+                <option value="DRA. CAMILA">DRA. CAMILA</option>
+                <option value="ALÊ CARDOSO">ALÊ CARDOSO</option>
+                <option value="LETYCIA">LETYCIA</option>
               </select>
             </div>
-            <div class="form-group full">
-              <label>Procedimento(s) Realizado(s)</label>
-              <textarea id="procedimento" rows="2" placeholder="Descreva os procedimentos..."></textarea>
-            </div>
-            <div class="form-group full">
-              <label>Produtos de Home Care</label>
-              <textarea id="home_care" rows="2" placeholder="Produtos indicados/adquiridos..."></textarea>
-            </div>
             <div class="form-group">
-              <label>Próximo Agendamento / Retorno</label>
-              <input type="text" id="proximo_agendamento" placeholder="Ex: Retorno em 15 dias (10/10 às 14h)">
+              <label>Descrição</label>
+              <input type="text" id="descricao" value="Venda personalizada">
             </div>
-            
-            <div class="form-group">
-              <label>Forma de Pagamento</label>
-              <select id="forma_pagamento" onchange="toggleCartaoFlags()">
-                <option value="Dinheiro">Dinheiro</option>
-                <option value="PIX">PIX</option>
-                <option value="Cartão">Cartão</option>
-              </select>
-            </div>
-            
-            <div class="form-group full" id="group-bandeira" style="display: none;">
-              <label>Bandeira & Parcelas do Cartão</label>
-              <div class="card-flags">
-                <span class="flag-opt" onclick="selectFlag(this, 'Mastercard')">Mastercard</span>
-                <span class="flag-opt" onclick="selectFlag(this, 'Visa')">Visa</span>
-                <span class="flag-opt" onclick="selectFlag(this, 'Amex')">Amex</span>
-                <span class="flag-opt" onclick="selectFlag(this, 'Elo')">Elo</span>
-                <span class="flag-opt" onclick="selectFlag(this, 'Hipercard')">Hipercard</span>
-              </div>
-              <select id="parcelas_cartao" style="margin-top: 8px;">
-                <option value="1x À vista">À vista (1x)</option>
-                <option value="2x">2x sem juros</option>
-                <option value="3x">3x sem juros</option>
-                <option value="4x">4x</option>
-                <option value="5x">5x</option>
-                <option value="6x">6x</option>
-                <option value="10x">10x</option>
-                <option value="12x">12x</option>
-              </select>
-              <input type="hidden" id="bandeira_cartao">
-            </div>
-
-            <div class="form-group">
-              <label>Status do Pagamento</label>
-              <select id="status_pagamento">
-                <option value="Pendente">Pendente</option>
-                <option value="Pago">Pago</option>
-                <option value="Parcial">Parcial</option>
-              </select>
-            </div>
-
-            <!-- CÁLCULO AUTOMÁTICO DE VALORES -->
-            <div class="form-group">
-              <label>Valor Procedimento(s) (R$)</label>
-              <input type="number" step="0.01" id="valor_procedimento" placeholder="0,00" oninput="calcularTotal()">
-            </div>
-
-            <div class="form-group">
-              <label>Valor Produto(s) (R$)</label>
-              <input type="number" step="0.01" id="valor_produto" placeholder="0,00" oninput="calcularTotal()">
-            </div>
-
-            <div class="form-group full">
-              <label>Valor Total Somado (R$)</label>
-              <input type="number" step="0.01" id="valor" class="total-highlight" placeholder="0,00" readonly>
-            </div>
-
           </div>
 
-          <button type="submit" class="btn-submit"><i class="fa-solid fa-floppy-disk"></i> Gravar Comanda</button>
+          <!-- BLOCO 1: PROCEDIMENTOS / PRODUTOS DINÂMICOS -->
+          <div class="section-block">
+            <div class="section-block-title">Procedimentos / Produtos</div>
+            <div id="items-container"></div>
+            <button type="button" class="btn-add-item" onclick="addItemRow()">
+              <i class="fa-solid fa-plus"></i> Adicionar Procedimentos/Produtos
+            </button>
+          </div>
+
+          <!-- BLOCO 2: RECEBIMENTO FRACIONADO -->
+          <div class="section-block">
+            <div class="section-block-title">Recebimento (Múltiplas Formas)</div>
+            <div id="payments-container"></div>
+            <button type="button" class="btn-add-item" onclick="addPaymentRow()">
+              <i class="fa-solid fa-plus"></i> Adicionar Forma de Pagamento
+            </button>
+          </div>
+
+          <!-- BLOCO 3: RESUMO DE VALORES E TAXAS -->
+          <div class="totals-summary">
+            <div class="total-line">
+              <span>Total Bruto:</span>
+              <span id="lbl-total-bruto">R$ 0,00</span>
+            </div>
+            <div class="total-line">
+              <span>Taxas de Maquininha (R$):</span>
+              <input type="number" step="0.01" id="taxas_maquininha" value="0.00" style="width: 100px; text-align: right;" oninput="calcularGeral()">
+            </div>
+            <div class="total-line main">
+              <span>Total Líquido:</span>
+              <span id="lbl-total-liquido">R$ 0,00</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit"><i class="fa-solid fa-check-circle"></i> Salvar Venda</button>
         </form>
       </div>
     </div>
 
-    <!-- ABA HISTÓRICO / RECEPÇÃO / FINANCEIRO -->
+    <!-- ABA HISTÓRICO / RECEPÇÃO -->
     <div id="tab-historico" class="tab-content">
-      
-      <!-- Resumo Financeiro em Cards -->
       <div class="summary-grid">
         <div class="summary-card">
           <div class="title">Total Faturado</div>
           <div class="value" id="total-faturado">R$ 0,00</div>
         </div>
         <div class="summary-card">
-          <div class="title">Total Recebido (Pago)</div>
-          <div class="value" style="color: #2e7d32;" id="total-pago">R$ 0,00</div>
-        </div>
-        <div class="summary-card">
-          <div class="title">Pendente de Cobrança</div>
-          <div class="value" style="color: #c65911;" id="total-pendente">R$ 0,00</div>
+          <div class="title">Total Líquido</div>
+          <div class="value" style="color: #2e7d32;" id="total-liquido-card">R$ 0,00</div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title"><i class="fa-solid fa-list"></i> Comandas Registradas</div>
-        
-        <!-- Barra de Busca e Filtros Rápidos -->
+        <div class="card-title">Vendas Registradas</div>
         <div class="filter-bar">
-          <input type="text" id="search-paciente" placeholder="🔍 Buscar por paciente..." onkeyup="filtrarComandas()">
-          <select id="filter-profissional" onchange="filtrarComandas()">
-            <option value="">Todas as Profissionais</option>
-            <option value="Dra. Lorena">Dra. Lorena</option>
-            <option value="Dra. Fatyene">Dra. Fatyene</option>
-            <option value="Dra. Camila">Dra. Camila</option>
-            <option value="Alê Cardoso">Alê Cardoso</option>
-            <option value="Letycia">Letycia</option>
-          </select>
-          <div style="display: flex; gap: 6px;">
-            <button class="btn-quick-filter active" onclick="setFilterPeriod('hoje', this)">Hoje</button>
-            <button class="btn-quick-filter" onclick="setFilterPeriod('semana', this)">Semana</button>
-            <button class="btn-quick-filter" onclick="setFilterPeriod('todos', this)">Todos</button>
-          </div>
+          <input type="text" id="search-paciente" placeholder="🔍 Buscar cliente..." onkeyup="filtrarComandas()">
         </div>
-
         <div class="table-responsive">
-          <table id="tabelaComandas">
+          <table>
             <thead>
               <tr>
                 <th>Data</th>
-                <th>Paciente</th>
-                <th>Profissional</th>
+                <th>Cliente</th>
+                <th>Vendedor</th>
+                <th>Categoria</th>
                 <th>Valor Total</th>
-                <th>Pagamento</th>
-                <th>Status</th>
-                <th>Ações</th>
+                <th>Pagamentos</th>
               </tr>
             </thead>
             <tbody id="lista-comandas-body">
-              <tr><td colspan="7" style="text-align:center; color: var(--text-muted);">Carregando comandas...</td></tr>
+              <tr><td colspan="6" style="text-align:center;">Nenhuma venda gravada ainda.</td></tr>
             </tbody>
           </table>
         </div>
@@ -417,160 +370,150 @@
   </div>
 
   <script>
-    document.getElementById('data').valueAsDate = new Date();
+    document.getElementById('data_venda').valueAsDate = new Date();
     let comandasDados = [];
 
-    function calcularTotal() {
-      const vProc = parseFloat(document.getElementById('valor_procedimento').value) || 0;
-      const vProd = parseFloat(document.getElementById('valor_produto').value) || 0;
-      const total = vProc + vProd;
-      document.getElementById('valor').value = total.toFixed(2);
-    }
+    // Inicialização das linhas dinâmicas
+    window.onload = function() {
+      addItemRow();
+      addPaymentRow();
+    };
 
     function switchTab(tab, btn) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.btn-nav').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-' + tab).classList.add('active');
       if(btn) btn.classList.add('active');
-      if(tab === 'historico') carregarHistorico();
     }
 
-    function toggleCartaoFlags() {
-      const forma = document.getElementById('forma_pagamento').value;
-      document.getElementById('group-bandeira').style.display = (forma === 'Cartão') ? 'block' : 'none';
+    // Gerenciador de Itens (Procedimentos/Produtos)
+    function addItemRow() {
+      const container = document.getElementById('items-container');
+      const div = document.createElement('div');
+      div.className = 'dynamic-row';
+      div.innerHTML = `
+        <input type="text" placeholder="Nome do item / procedimento" class="item-nome" required>
+        <input type="number" placeholder="Qtd" class="item-qtd" value="1" min="1" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Valor (R$)" class="item-valor" value="0.00" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Desc. (R$)" class="item-desc" value="0.00" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Total (R$)" class="item-total" value="0.00" readonly>
+        <button type="button" class="btn-remove-row" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
+      `;
+      container.appendChild(div);
+      calcularGeral();
     }
 
-    function selectFlag(el, flag) {
-      document.querySelectorAll('.flag-opt').forEach(opt => opt.classList.remove('selected'));
-      el.classList.add('selected');
-      document.getElementById('bandeira_cartao').value = flag;
+    // Gerenciador de Recebimentos Fracionados
+    function addPaymentRow() {
+      const container = document.getElementById('payments-container');
+      const div = document.createElement('div');
+      div.className = 'payment-row';
+      div.innerHTML = `
+        <input type="number" step="0.01" placeholder="Valor (R$)" class="pay-valor" value="0.00" oninput="calcularGeral()">
+        <select class="pay-metodo">
+          <option value="Outras bandeiras">Outras bandeiras</option>
+          <option value="Visa">Visa</option>
+          <option value="Mastercard">Mastercard</option>
+          <option value="PIX">PIX</option>
+          <option value="Dinheiro">Dinheiro</option>
+        </select>
+        <select class="pay-conta">
+          <option value="ITAÚ">ITAÚ</option>
+          <option value="INTER">INTER</option>
+          <option value="CAIXINHA">CAIXINHA</option>
+        </select>
+        <input type="date" class="pay-vencimento">
+        <select class="pay-parcelas">
+          <option value="A vista">A vista</option>
+          <option value="2x">2x</option>
+          <option value="3x">3x</option>
+          <option value="4x">4x</option>
+          <option value="6x">6x</option>
+          <option value="10x">10x</option>
+          <option value="12x">12x</option>
+        </select>
+        <button type="button" class="btn-remove-row" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
+      `;
+      container.appendChild(div);
+      div.querySelector('.pay-vencimento').valueAsDate = new Date();
+      calcularGeral();
+    }
+
+    function removeRow(btn) {
+      btn.parentElement.remove();
+      calcularGeral();
+    }
+
+    // Cálculo Global de Valores
+    function calcularGeral() {
+      let totalBruto = 0;
+
+      // Soma dos itens
+      document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
+        const qtd = parseFloat(row.querySelector('.item-qtd').value) || 0;
+        const val = parseFloat(row.querySelector('.item-valor').value) || 0;
+        const desc = parseFloat(row.querySelector('.item-desc').value) || 0;
+        const subtotal = Math.max(0, (qtd * val) - desc);
+        
+        row.querySelector('.item-total').value = subtotal.toFixed(2);
+        totalBruto += subtotal;
+      });
+
+      const taxas = parseFloat(document.getElementById('taxas_maquininha').value) || 0;
+      const totalLiquido = Math.max(0, totalBruto - taxas);
+
+      document.getElementById('lbl-total-bruto').innerText = 'R$ ' + totalBruto.toFixed(2);
+      document.getElementById('lbl-total-liquido').innerText = 'R$ ' + totalLiquido.toFixed(2);
     }
 
     function salvarComanda(e) {
       e.preventDefault();
       
-      const novaComanda = {
-        data: document.getElementById('data').value,
-        paciente: document.getElementById('paciente').value,
-        profissional: document.getElementById('profissional').value,
-        indicacao: document.getElementById('indicacao').value,
-        procedimento: document.getElementById('procedimento').value,
-        home_care: document.getElementById('home_care').value,
-        proximo_agendamento: document.getElementById('proximo_agendamento').value,
-        forma_pagamento: document.getElementById('forma_pagamento').value,
-        bandeira_cartao: document.getElementById('bandeira_cartao').value,
-        parcelas_cartao: document.getElementById('parcelas_cartao').value,
-        status_pagamento: document.getElementById('status_pagamento').value,
-        valor_procedimento: parseFloat(document.getElementById('valor_procedimento').value) || 0,
-        valor_produto: parseFloat(document.getElementById('valor_produto').value) || 0,
-        valor_total: parseFloat(document.getElementById('valor').value) || 0
+      const cliente = document.getElementById('paciente').value;
+      const totalBrutoStr = document.getElementById('lbl-total-bruto').innerText;
+
+      const novaVenda = {
+        data: document.getElementById('data_venda').value,
+        cliente: cliente,
+        vendedor: document.getElementById('vendedor').value,
+        categoria: document.getElementById('categoria').value,
+        total: totalBrutoStr
       };
 
-      comandasDados.unshift(novaComanda);
-      alert('Comanda de ' + novaComanda.paciente + ' gravada com sucesso!');
+      comandasDados.unshift(novaVenda);
+      alert('Venda para ' + cliente + ' gravada com sucesso!');
+      
       document.getElementById('formComanda').reset();
-      document.getElementById('data').valueAsDate = new Date();
-      document.getElementById('group-bandeira').style.display = 'none';
+      document.getElementById('data_venda').valueAsDate = new Date();
+      document.getElementById('items-container').innerHTML = '';
+      document.getElementById('payments-container').innerHTML = '';
+      addItemRow();
+      addPaymentRow();
+      renderizarHistorico();
     }
 
-    function carregarHistorico() {
-      renderizarTabela(comandasDados);
-    }
-
-    function renderizarTabela(dados) {
+    function renderizarHistorico() {
       const tbody = document.getElementById('lista-comandas-body');
       tbody.innerHTML = '';
 
-      if(dados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma comanda encontrada.</td></tr>';
-        atualizarResumo(0, 0, 0);
+      if(comandasDados.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhuma venda gravada ainda.</td></tr>';
         return;
       }
 
-      let totalFat = 0, totalP = 0, totalPend = 0;
-
-      dados.forEach((c, index) => {
-        totalFat += c.valor_total;
-        if(c.status_pagamento === 'Pago') totalP += c.valor_total;
-        else totalPend += c.valor_total;
-
-        const dataFmt = c.data ? c.data.split('-').reverse().join('/') : '-';
-        const badgeClass = c.status_pagamento === 'Pago' ? 'badge-pago' : 'badge-pendente';
-
+      comandasDados.forEach(c => {
         const row = `
           <tr>
-            <td>${dataFmt}</td>
-            <td><strong>${c.paciente}</strong></td>
-            <td>${c.profissional}</td>
-            <td>R$ ${c.valor_total.toFixed(2)}</td>
-            <td>${c.forma_pagamento} ${c.bandeira_cartao ? '(' + c.bandeira_cartao + ')' : ''}</td>
-            <td><span class="badge-status ${badgeClass}">${c.status_pagamento}</span></td>
-            <td>
-              <button class="btn-action" title="Imprimir Comanda" onclick="imprimirComanda(${index})"><i class="fa-solid fa-print"></i></button>
-            </td>
+            <td>${c.data}</td>
+            <td><strong>${c.cliente}</strong></td>
+            <td>${c.vendedor}</td>
+            <td>${c.categoria}</td>
+            <td><strong>${c.total}</strong></td>
+            <td><span style="color: #2e7d32; font-weight:600;">Concluído</span></td>
           </tr>
         `;
         tbody.innerHTML += row;
       });
-
-      atualizarResumo(totalFat, totalP, totalPend);
-    }
-
-    function atualizarResumo(fat, pago, pend) {
-      document.getElementById('total-faturado').innerText = 'R$ ' + fat.toFixed(2);
-      document.getElementById('total-pago').innerText = 'R$ ' + pago.toFixed(2);
-      document.getElementById('total-pendente').innerText = 'R$ ' + pend.toFixed(2);
-    }
-
-    function filtrarComandas() {
-      const termo = document.getElementById('search-paciente').value.toLowerCase();
-      const prof = document.getElementById('filter-profissional').value;
-
-      const filtradas = comandasDados.filter(c => {
-        const matchNome = c.paciente.toLowerCase().includes(termo);
-        const matchProf = prof === '' || c.profissional === prof;
-        return matchNome && matchProf;
-      });
-
-      renderizarTabela(filtradas);
-    }
-
-    function setFilterPeriod(periodo, btn) {
-      document.querySelectorAll('.btn-quick-filter').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      if(periodo === 'todos') {
-        renderizarTabela(comandasDados);
-        return;
-      }
-
-      const hoje = new Date().toISOString().split('T')[0];
-      const filtradas = comandasDados.filter(c => c.data === hoje);
-      renderizarTabela(filtradas);
-    }
-
-    function imprimirComanda(index) {
-      const c = comandasDados[index];
-      const win = window.open('', '', 'width=600,height=600');
-      win.document.write(`
-        <html>
-        <head><title>Comanda - ${c.paciente}</title></head>
-        <body style="font-family: sans-serif; padding: 20px;">
-          <h2>CLÍNICA LM - COMANDA DIGITAL</h2>
-          <hr>
-          <p><strong>Paciente:</strong> ${c.paciente}</p>
-          <p><strong>Data:</strong> ${c.data}</p>
-          <p><strong>Profissional:</strong> ${c.profissional}</p>
-          <p><strong>Procedimentos:</strong> ${c.procedimento || 'Nenhum'}</p>
-          <p><strong>Produtos:</strong> ${c.home_care || 'Nenhum'}</p>
-          <p><strong>Valor Total:</strong> R$ ${c.valor_total.toFixed(2)}</p>
-          <p><strong>Forma de Pagamento:</strong> ${c.forma_pagamento} (${c.status_pagamento})</p>
-          <br><br>
-          <p style="text-align: center;">___________________________________<br>Assinatura / Conferência</p>
-        </body>
-        </html>
-      `);
-      win.print();
     }
   </script>
 </body>
