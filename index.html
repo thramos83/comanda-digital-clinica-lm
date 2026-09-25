@@ -50,22 +50,13 @@
       background: #ffffff;
       border: 1px solid var(--sand-border);
       border-radius: 8px;
-      padding: 6px 12px;
+      padding: 8px 14px;
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 11px;
-      font-weight: 600;
-      color: var(--gold-dark);
-    }
-    .user-access-badge select {
-      border: none;
-      background: transparent;
-      font-size: 11px;
       font-weight: 700;
-      color: var(--text-main);
-      cursor: pointer;
-      outline: none;
+      color: var(--gold-dark);
     }
 
     .nav-buttons { display: flex; gap: 8px; }
@@ -276,47 +267,23 @@
       background: var(--sand-light);
       border: 1px solid var(--sand-border);
       color: var(--gold-dark);
-      padding: 5px 9px;
+      padding: 5px 10px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
       font-weight: 600;
-      margin-right: 2px;
     }
 
     .btn-action-check {
       background: var(--info-blue);
       border: none;
       color: #fff;
-      padding: 5px 9px;
+      padding: 5px 10px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
       font-weight: 600;
-      margin-right: 2px;
-    }
-
-    .btn-action-approve {
-      background: var(--gold-primary);
-      border: none;
-      color: #fff;
-      padding: 5px 9px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 600;
-      margin-right: 2px;
-    }
-
-    .btn-action-delete {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      color: #dc2626;
-      padding: 5px 9px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 600;
+      margin-left: 4px;
     }
 
     @media (max-width: 768px) {
@@ -350,18 +317,14 @@
       </div>
 
       <div class="header-actions">
-        <!-- Níveis de Acesso -->
+        <!-- Rótulo Fixo para a Equipe -->
         <div class="user-access-badge">
-          <i class="fa-solid fa-user-shield"></i> Perfil:
-          <select id="user-role" onchange="alterarPerfilAcesso()">
-            <option value="recepcao">Recepção / Profissional</option>
-            <option value="admin">Thiago (Administrador)</option>
-          </select>
+          <i class="fa-solid fa-user-check"></i> Recepção / Profissional
         </div>
 
         <div class="nav-buttons">
           <button class="btn-nav active" onclick="switchTab('comanda', this)"><i class="fa-solid fa-plus-circle"></i> Nova Venda</button>
-          <button class="btn-nav" onclick="switchTab('historico', this)"><i class="fa-solid fa-receipt"></i> Recepção / Financeiro</button>
+          <button class="btn-nav" onclick="switchTab('historico', this)"><i class="fa-solid fa-receipt"></i> Recepção / Histórico</button>
         </div>
       </div>
     </div>
@@ -494,7 +457,7 @@
       </div>
     </div>
 
-    <!-- ABA HISTÓRICO / RECEPÇÃO / FINANCEIRO -->
+    <!-- ABA HISTÓRICO / RECEPÇÃO -->
     <div id="tab-historico" class="tab-content">
       <div class="summary-grid">
         <div class="summary-card">
@@ -502,7 +465,7 @@
           <div class="value" id="total-faturado">R$ 0,00</div>
         </div>
         <div class="summary-card">
-          <div class="title">Total Líquido (Recebido)</div>
+          <div class="title">Total Líquido (Estimado)</div>
           <div class="value" style="color: #2e7d32;" id="total-liquido-card">R$ 0,00</div>
         </div>
       </div>
@@ -577,10 +540,6 @@
       if(tab === 'historico') renderizarHistorico();
     }
 
-    function alterarPerfilAcesso() {
-      renderizarHistorico();
-    }
-
     function addItemRow(nome = '', qtd = 1, valor = '0.00', desc = '0.00') {
       const container = document.getElementById('items-container');
       const div = document.createElement('div');
@@ -644,7 +603,6 @@
       calcularGeral();
     }
 
-    // CÁLCULO GERAL
     function calcularGeral() {
       let totalBruto = 0;
       document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
@@ -718,7 +676,6 @@
       return pagamentos;
     }
 
-    // SALVAMENTO INTEGRAÇÃO COM SERVERLESS FUNCTION / VERCEL / SUPABASE
     async function salvarComanda(e) {
       e.preventDefault();
       
@@ -754,7 +711,7 @@
 
         if (editIndex >= 0) {
           comandasDados[editIndex] = novaVenda;
-          alert('Comanda de ' + cliente + ' atualizada! Retornou para o status de conferência da recepção.');
+          alert('Comanda de ' + cliente + ' atualizada! Enviada para conferência da recepção.');
         } else {
           comandasDados.unshift(novaVenda);
           alert('Comanda de ' + cliente + ' gravada no Supabase! Enviada para a recepção.');
@@ -802,7 +759,6 @@
       tbody.innerHTML = '';
 
       const termo = document.getElementById('search-paciente').value.toLowerCase();
-      const userRole = document.getElementById('user-role').value;
       const hojeStr = new Date().toISOString().split('T')[0];
       const mesAtualStr = hojeStr.substring(0, 7);
 
@@ -851,17 +807,8 @@
         sumFat += valBruto;
         sumLiq += valLiq;
 
-        // BOTÃO CHECK DA RECEPÇÃO
         const btnCheckRecepcao = (c.status === 'Lançado pela Cabine') 
           ? `<button class="btn-action-check" onclick="checkRecepcao(${indexReal})"><i class="fa-solid fa-check-double"></i> Check Recepção</button>` : '';
-
-        // BOTÃO APROVAR DO THIAGO
-        const btnApprove = (userRole === 'admin' && c.status !== 'Aprovado (Thiago)') 
-          ? `<button class="btn-action-approve" onclick="aprovarComanda(${indexReal})"><i class="fa-solid fa-thumbs-up"></i> Aprovar Thiago</button>` : '';
-
-        // BOTÃO EXCLUIR DO THIAGO
-        const btnDelete = (userRole === 'admin') 
-          ? `<button class="btn-action-delete" onclick="excluirComanda(${indexReal})"><i class="fa-solid fa-trash"></i> Apagar</button>` : '';
 
         const row = `
           <tr>
@@ -874,8 +821,6 @@
             <td>
               <button class="btn-action-edit" onclick="editarComanda(${indexReal})"><i class="fa-solid fa-pen"></i> Editar</button>
               ${btnCheckRecepcao}
-              ${btnApprove}
-              ${btnDelete}
             </td>
           </tr>
         `;
@@ -926,21 +871,6 @@
       comandasDados[index].status = 'Pagamento Conferido (Recepção)';
       alert('Conferência realizada! Comanda marcada como "Pagamento Conferido".');
       renderizarHistorico();
-    }
-
-    function aprovarComanda(index) {
-      comandasDados[index].status = 'Aprovado (Thiago)';
-      alert('Comanda de ' + (comandasDados[index].cliente || comandasDados[index].paciente) + ' aprovada no financeiro!');
-      renderizarHistorico();
-    }
-
-    function excluirComanda(index) {
-      const cliente = comandasDados[index].cliente || comandasDados[index].paciente;
-      if (confirm('Tem certeza que deseja apagar a comanda de "' + cliente + '"? Essa ação não poderá ser desfeita.')) {
-        comandasDados.splice(index, 1);
-        alert('Comanda removida!');
-        renderizarHistorico();
-      }
     }
 
     function filtrarComandas() {
