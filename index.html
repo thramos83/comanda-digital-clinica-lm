@@ -233,7 +233,7 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* Histórico e Filtros por Data */
+    /* Histórico */
     .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 22px; }
     .summary-card { background: var(--sand-light); border: 1px solid var(--sand-border); border-radius: 12px; padding: 16px; text-align: center; }
     .summary-card .title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
@@ -333,7 +333,7 @@
       </div>
 
       <div class="header-actions">
-        <!-- Modo de Acesso / Níveis de Permissão -->
+        <!-- Níveis de Acesso -->
         <div class="user-access-badge">
           <i class="fa-solid fa-user-shield"></i> Perfil:
           <select id="user-role" onchange="alterarPerfilAcesso()">
@@ -446,7 +446,7 @@
             </button>
           </div>
 
-          <!-- BLOCO 3: TOTALIZADORES & CÁLCULO DE RESTANTE -->
+          <!-- BLOCO 3: TOTALIZADORES, TAXAS AUTOMÁTICAS E RESTANTE -->
           <div class="totals-summary">
             <div class="total-line">
               <span>Total Bruto (Itens):</span>
@@ -457,18 +457,17 @@
               <span id="lbl-total-pago-lancado">R$ 0,00</span>
             </div>
 
-            <!-- INDICADOR DE FALTA PAGAR -->
             <div class="total-line restante" id="box-restante">
               <span>Falta Pagar / Restante:</span>
               <span id="lbl-restante">R$ 0,00</span>
             </div>
 
             <div class="total-line" style="margin-top: 6px;">
-              <span>Taxas de Maquininha (R$):</span>
-              <input type="number" step="0.01" id="taxas_maquininha" value="0.00" style="width: 110px; text-align: right;" oninput="calcularGeral()">
+              <span>Taxas de Maquininha (Rede Calculada):</span>
+              <span id="lbl-taxas-calculadas" style="color: var(--danger); font-weight:600;">R$ 0,00</span>
             </div>
             <div class="total-line main">
-              <span>Total Líquido:</span>
+              <span>Total Líquido Estimado:</span>
               <span id="lbl-total-liquido">R$ 0,00</span>
             </div>
           </div>
@@ -482,11 +481,11 @@
     <div id="tab-historico" class="tab-content">
       <div class="summary-grid">
         <div class="summary-card">
-          <div class="title">Total Faturado (Período)</div>
+          <div class="title">Total Faturado (Bruto)</div>
           <div class="value" id="total-faturado">R$ 0,00</div>
         </div>
         <div class="summary-card">
-          <div class="title">Total Líquido (Período)</div>
+          <div class="title">Total Líquido (Recebido)</div>
           <div class="value" style="color: #2e7d32;" id="total-liquido-card">R$ 0,00</div>
         </div>
       </div>
@@ -494,7 +493,6 @@
       <div class="card">
         <div class="card-title">Comandas Registradas</div>
         
-        <!-- BARRA DE BUSCA E FILTROS DE DATA -->
         <div class="filter-bar">
           <input type="text" id="search-paciente" placeholder="🔍 Buscar cliente..." onkeyup="filtrarComandas()">
           
@@ -536,6 +534,19 @@
     let comandasDados = [];
     let filtroPeriodoAtual = 'hoje';
 
+    // TABELA DE TAXAS MAQUININHA REDE
+    const TAXAS_REDE = {
+      'Mastercard': { 'Débito à vista': 1.09, 'A vista': 2.29, '2x': 4.21, '3x': 4.85, '4x': 5.49, '5x': 6.13, '6x': 6.77, '7x': 7.61, '8x': 8.25, '9x': 8.89, '10x': 9.53, '11x': 10.17, '12x': 10.81 },
+      'Visa':       { 'Débito à vista': 1.09, 'A vista': 2.29, '2x': 4.21, '3x': 4.85, '4x': 5.49, '5x': 6.13, '6x': 6.77, '7x': 7.61, '8x': 8.25, '9x': 8.89, '10x': 9.53, '11x': 10.17, '12x': 10.81 },
+      'Amex':       { 'Débito à vista': 1.49, 'A vista': 2.59, '2x': 5.01, '3x': 5.65, '4x': 6.29, '5x': 6.93, '6x': 7.57, '7x': 8.41, '8x': 9.05, '9x': 9.69, '10x': 10.33, '11x': 10.97, '12x': 11.61 },
+      'Elo':        { 'Débito à vista': 1.49, 'A vista': 2.59, '2x': 5.01, '3x': 5.65, '4x': 6.29, '5x': 6.93, '6x': 7.57, '7x': 8.41, '8x': 9.05, '9x': 9.69, '10x': 10.33, '11x': 10.97, '12x': 11.61 },
+      'Outras bandeiras': { 'Débito à vista': 1.49, 'A vista': 2.59, '2x': 5.01, '3x': 5.65, '4x': 6.29, '5x': 6.93, '6x': 7.57, '7x': 8.41, '8x': 9.05, '9x': 9.69, '10x': 10.33, '11x': 10.97, '12x': 11.61 }
+    };
+
+    function formatarMoeda(valor) {
+      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor || 0);
+    }
+
     window.onload = function() {
       addItemRow();
       addPaymentRow();
@@ -562,23 +573,24 @@
         <input type="number" placeholder="Qtd" class="item-qtd" value="${qtd}" min="1" oninput="calcularGeral()">
         <input type="number" step="0.01" placeholder="Valor" class="item-valor" value="${valor}" oninput="calcularGeral()">
         <input type="number" step="0.01" placeholder="Desc." class="item-desc" value="${desc}" oninput="calcularGeral()">
-        <input type="number" step="0.01" placeholder="Total" class="item-total" value="0.00" readonly>
+        <input type="text" placeholder="Total" class="item-total" value="R$ 0,00" readonly>
         <button type="button" class="btn-remove-row" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
       `;
       container.appendChild(div);
       calcularGeral();
     }
 
-    function addPaymentRow(valor = '0.00', metodo = 'Outras bandeiras', conta = 'ITAÚ', vencimento = '', parcelas = 'A vista') {
+    function addPaymentRow(valor = '0.00', metodo = 'Mastercard', conta = 'ITAÚ', vencimento = '', parcelas = 'A vista') {
       const container = document.getElementById('payments-container');
       const div = document.createElement('div');
       div.className = 'payment-row';
       div.innerHTML = `
         <input type="number" step="0.01" placeholder="Valor" class="pay-valor" value="${valor}" oninput="calcularGeral()">
-        <select class="pay-metodo">
-          <option value="Outras bandeiras" ${metodo==='Outras bandeiras'?'selected':''}>Outras bandeiras</option>
-          <option value="Visa" ${metodo==='Visa'?'selected':''}>Visa</option>
+        <select class="pay-metodo" onchange="calcularGeral()">
           <option value="Mastercard" ${metodo==='Mastercard'?'selected':''}>Mastercard</option>
+          <option value="Visa" ${metodo==='Visa'?'selected':''}>Visa</option>
+          <option value="Amex" ${metodo==='Amex'?'selected':''}>Amex</option>
+          <option value="Elo" ${metodo==='Elo'?'selected':''}>Elo</option>
           <option value="PIX" ${metodo==='PIX'?'selected':''}>PIX</option>
           <option value="Dinheiro" ${metodo==='Dinheiro'?'selected':''}>Dinheiro</option>
         </select>
@@ -588,12 +600,19 @@
           <option value="CAIXINHA" ${conta==='CAIXINHA'?'selected':''}>CAIXINHA</option>
         </select>
         <input type="date" class="pay-vencimento" value="${vencimento}">
-        <select class="pay-parcelas">
-          <option value="A vista" ${parcelas==='A vista'?'selected':''}>A vista</option>
+        <select class="pay-parcelas" onchange="calcularGeral()">
+          <option value="A vista" ${parcelas==='A vista'?'selected':''}>A vista (1x)</option>
+          <option value="Débito à vista" ${parcelas==='Débito à vista'?'selected':''}>Débito à vista</option>
           <option value="2x" ${parcelas==='2x'?'selected':''}>2x</option>
           <option value="3x" ${parcelas==='3x'?'selected':''}>3x</option>
           <option value="4x" ${parcelas==='4x'?'selected':''}>4x</option>
+          <option value="5x" ${parcelas==='5x'?'selected':''}>5x</option>
           <option value="6x" ${parcelas==='6x'?'selected':''}>6x</option>
+          <option value="7x" ${parcelas==='7x'?'selected':''}>7x</option>
+          <option value="8x" ${parcelas==='8x'?'selected':''}>8x</option>
+          <option value="9x" ${parcelas==='9x'?'selected':''}>9x</option>
+          <option value="10x" ${parcelas==='10x'?'selected':''}>10x</option>
+          <option value="11x" ${parcelas==='11x'?'selected':''}>11x</option>
           <option value="12x" ${parcelas==='12x'?'selected':''}>12x</option>
         </select>
         <button type="button" class="btn-remove-row" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
@@ -608,7 +627,7 @@
       calcularGeral();
     }
 
-    // CÁLCULO GERAL E APURAÇÃO DO "RESTANTE / FALTA PAGAR"
+    // CÁLCULO GERAL COM DESCONTO AUTOMÁTICO DAS TAXAS REDE
     function calcularGeral() {
       let totalBruto = 0;
       document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
@@ -616,23 +635,35 @@
         const val = parseFloat(row.querySelector('.item-valor').value) || 0;
         const desc = parseFloat(row.querySelector('.item-desc').value) || 0;
         const subtotal = Math.max(0, (qtd * val) - desc);
-        row.querySelector('.item-total').value = subtotal.toFixed(2);
+        row.querySelector('.item-total').value = formatarMoeda(subtotal);
         totalBruto += subtotal;
       });
 
       let totalPagoLancado = 0;
+      let totalTaxasMaquininha = 0;
+
       document.querySelectorAll('#payments-container .payment-row').forEach(row => {
-        totalPagoLancado += parseFloat(row.querySelector('.pay-valor').value) || 0;
+        const valPay = parseFloat(row.querySelector('.pay-valor').value) || 0;
+        const metodo = row.querySelector('.pay-metodo').value;
+        const parcelas = row.querySelector('.pay-parcelas').value;
+
+        totalPagoLancado += valPay;
+
+        if (metodo !== 'PIX' && metodo !== 'Dinheiro' && valPay > 0) {
+          const tabBandeira = TAXAS_REDE[metodo] || TAXAS_REDE['Outras bandeiras'];
+          const pctTaxa = tabBandeira[parcelas] || 0;
+          totalTaxasMaquininha += (valPay * (pctTaxa / 100));
+        }
       });
 
       const restante = Math.max(0, totalBruto - totalPagoLancado);
-      const taxas = parseFloat(document.getElementById('taxas_maquininha').value) || 0;
-      const totalLiquido = Math.max(0, totalBruto - taxas);
+      const totalLiquido = Math.max(0, totalBruto - totalTaxasMaquininha);
 
-      document.getElementById('lbl-total-bruto').innerText = 'R$ ' + totalBruto.toFixed(2);
-      document.getElementById('lbl-total-pago-lancado').innerText = 'R$ ' + totalPagoLancado.toFixed(2);
-      document.getElementById('lbl-restante').innerText = 'R$ ' + restante.toFixed(2);
-      document.getElementById('lbl-total-liquido').innerText = 'R$ ' + totalLiquido.toFixed(2);
+      document.getElementById('lbl-total-bruto').innerText = formatarMoeda(totalBruto);
+      document.getElementById('lbl-total-pago-lancado').innerText = formatarMoeda(totalPagoLancado);
+      document.getElementById('lbl-restante').innerText = formatarMoeda(restante);
+      document.getElementById('lbl-taxas-calculadas').innerText = formatarMoeda(totalTaxasMaquininha);
+      document.getElementById('lbl-total-liquido').innerText = formatarMoeda(totalLiquido);
 
       const boxRestante = document.getElementById('box-restante');
       if (restante === 0 && totalBruto > 0) {
@@ -678,6 +709,9 @@
       const totalBrutoStr = document.getElementById('lbl-total-bruto').innerText;
       const totalLiquidoStr = document.getElementById('lbl-total-liquido').innerText;
 
+      // EXIGIR NOVA APROVAÇÃO SE QUALQUER COMANDA FOR EDITADA
+      const novoStatus = 'Pendente de Aprovação';
+
       const novaVenda = {
         data: document.getElementById('data_venda').value,
         cliente: cliente,
@@ -685,20 +719,19 @@
         categoria: document.getElementById('categoria').value,
         indicacao: document.getElementById('indicacao').value,
         proximo_atendimento: document.getElementById('proximo_atendimento').value,
-        taxas_maquininha: document.getElementById('taxas_maquininha').value,
         itens: capturarItensFormulario(),
         pagamentos: capturarPagamentosFormulario(),
         total: totalBrutoStr,
         totalLiquido: totalLiquidoStr,
-        status: editIndex >= 0 ? comandasDados[editIndex].status : 'Pendente de Aprovação'
+        status: novoStatus
       };
 
       if(editIndex >= 0) {
         comandasDados[editIndex] = novaVenda;
-        alert('Comanda de ' + cliente + ' atualizada!');
+        alert('Comanda de ' + cliente + ' atualizada! Requer nova aprovação do Thiago.');
       } else {
         comandasDados.unshift(novaVenda);
-        alert('Comanda de ' + cliente + ' registrada! Aguardando aprovação final do Thiago.');
+        alert('Comanda de ' + cliente + ' registrada! Aguardando aprovação do Thiago.');
       }
 
       resetarFormulario();
@@ -718,7 +751,6 @@
       addPaymentRow();
     }
 
-    // FILTROS DE DATA
     function setFiltroData(tipo, btn) {
       filtroPeriodoAtual = tipo;
       document.querySelectorAll('.btn-filter-quick').forEach(b => b.classList.remove('active'));
@@ -765,8 +797,8 @@
         const indexReal = comandasDados.indexOf(c);
         const badgeClass = c.status === 'Aprovado (Thiago)' ? 'badge-aprovado' : 'badge-pendente';
 
-        const valBruto = parseFloat(c.total.replace('R$', '').replace('.', '').replace(',', '.')) || 0;
-        const valLiq = parseFloat((c.totalLiquido || c.total).replace('R$', '').replace('.', '').replace(',', '.')) || 0;
+        const valBruto = parseFloat(c.total.replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+        const valLiq = parseFloat((c.totalLiquido || c.total).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
 
         sumFat += valBruto;
         sumLiq += valLiq;
@@ -799,8 +831,8 @@
     }
 
     function atualizarCardsResumo(fat, liq) {
-      document.getElementById('total-faturado').innerText = 'R$ ' + fat.toFixed(2);
-      document.getElementById('total-liquido-card').innerText = 'R$ ' + liq.toFixed(2);
+      document.getElementById('total-faturado').innerText = formatarMoeda(fat);
+      document.getElementById('total-liquido-card').innerText = formatarMoeda(liq);
     }
 
     function editarComanda(index) {
@@ -813,7 +845,6 @@
       document.getElementById('data_venda').value = c.data;
       document.getElementById('indicacao').value = c.indicacao || '';
       document.getElementById('proximo_atendimento').value = c.proximo_atendimento || '';
-      document.getElementById('taxas_maquininha').value = c.taxas_maquininha || '0.00';
 
       document.getElementById('items-container').innerHTML = '';
       if(c.itens && c.itens.length > 0) {
@@ -838,7 +869,7 @@
 
     function aprovarComanda(index) {
       comandasDados[index].status = 'Aprovado (Thiago)';
-      alert('Comanda de ' + comandasDados[index].cliente + ' aprovada!');
+      alert('Comanda de ' + comandasDados[index].cliente + ' aprovada com sucesso!');
       renderizarHistorico();
     }
 
