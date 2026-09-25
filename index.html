@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      /* Paleta Clean, Sofisticada & Premium - Clínica LM */
       --bg-main: #fcfbfa;           /* Off-white */
       --bg-card: #ffffff;           /* Branco puro */
       --sand-light: #f7f4ef;        /* Champagne / Bege suave */
@@ -18,6 +17,8 @@
       --gold-dark: #8c672f;         /* Dourado profundo */
       --text-main: #3a322d;         /* Marrom aquecido / Moka */
       --text-muted: #8c827a;       /* Marrom suave */
+      --danger: #c65911;
+      --danger-soft: #fce4d6;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
@@ -26,7 +27,7 @@
     header {
       background: linear-gradient(180deg, #f7f4ef 0%, #f2ede4 100%);
       border-bottom: 1px solid var(--sand-border);
-      padding: 22px 20px;
+      padding: 18px 20px;
     }
     .header-container {
       max-width: 1050px;
@@ -34,59 +35,84 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
     }
     .logo-area { display: flex; align-items: center; gap: 16px; }
-    .logo-svg { width: 50px; height: 50px; }
-    .logo-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 700; color: var(--gold-dark); letter-spacing: 2.5px; }
-    .logo-subtitle { font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 2px; }
+    .logo-svg { width: 48px; height: 48px; }
+    .logo-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 700; color: var(--gold-dark); letter-spacing: 2px; }
+    .logo-subtitle { font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1.5px; }
 
-    .nav-buttons { display: flex; gap: 12px; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+
+    .user-access-badge {
+      background: #ffffff;
+      border: 1px solid var(--sand-border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gold-dark);
+    }
+    .user-access-badge select {
+      border: none;
+      background: transparent;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .nav-buttons { display: flex; gap: 8px; }
     .btn-nav {
       background: var(--bg-card);
       border: 1px solid var(--sand-border);
       color: var(--text-main);
-      padding: 10px 18px;
+      padding: 9px 15px;
       border-radius: 8px;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 12px;
-      letter-spacing: 0.5px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.25s ease;
+      gap: 6px;
+      transition: all 0.2s ease;
     }
     .btn-nav:hover, .btn-nav.active { background: var(--gold-primary); color: #ffffff; border-color: var(--gold-primary); }
 
-    .container { max-width: 1050px; margin: 30px auto; padding: 0 20px; }
+    .container { max-width: 1050px; margin: 25px auto; padding: 0 18px; }
     .card {
       background: var(--bg-card);
       border-radius: 16px;
       border: 1px solid var(--sand-border);
-      box-shadow: 0 10px 30px rgba(58,50,45,0.03);
-      padding: 32px;
-      margin-bottom: 30px;
+      box-shadow: 0 8px 25px rgba(58,50,45,0.03);
+      padding: 28px;
+      margin-bottom: 25px;
     }
     .card-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
       color: var(--gold-dark);
-      margin-bottom: 24px;
-      padding-bottom: 12px;
+      margin-bottom: 22px;
+      padding-bottom: 10px;
       border-bottom: 1px solid var(--sand-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     
-    label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; }
+    label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
     input, select, textarea {
       width: 100%;
-      padding: 11px 14px;
+      padding: 10px 12px;
       border: 1px solid var(--sand-border);
       border-radius: 8px;
       font-size: 13px;
@@ -104,9 +130,9 @@
       box-shadow: 0 0 0 3px rgba(197,160,89,0.12); 
     }
 
-    /* Tabelas Dinâmicas com Rótulos Visíveis */
-    .section-block { margin-top: 28px; padding-top: 18px; border-top: 1px dashed var(--sand-border); }
-    .section-block-title { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--gold-dark); letter-spacing: 1px; margin-bottom: 14px; }
+    /* Tabelas Dinâmicas */
+    .section-block { margin-top: 25px; padding-top: 16px; border-top: 1px dashed var(--sand-border); }
+    .section-block-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--gold-dark); letter-spacing: 1px; margin-bottom: 12px; }
 
     .labels-header {
       display: grid;
@@ -143,8 +169,8 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-top: 10px;
-      padding: 8px 16px;
+      margin-top: 8px;
+      padding: 8px 14px;
       border-radius: 8px;
       transition: all 0.2s;
     }
@@ -153,38 +179,52 @@
     .btn-remove-row {
       background: none;
       border: none;
-      color: #c65911;
+      color: var(--danger);
       cursor: pointer;
       font-size: 15px;
       text-align: center;
     }
 
-    /* Resumo de Totais */
+    /* Painel de Fechamento & Falta Pagar */
     .totals-summary {
       background-color: var(--sand-light);
       border: 1px solid var(--sand-border);
       border-radius: 12px;
-      padding: 20px;
-      margin-top: 28px;
+      padding: 18px;
+      margin-top: 25px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
     .total-line { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-muted); }
-    .total-line.main { font-size: 18px; font-weight: 700; color: var(--gold-dark); border-top: 1px solid var(--sand-border); padding-top: 10px; margin-top: 6px; }
+    .total-line.restante {
+      background: #fff3cd;
+      border: 1px solid #ffeeba;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #856404;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .total-line.restante.pago-zero {
+      background: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+    }
+    .total-line.main { font-size: 18px; font-weight: 700; color: var(--gold-dark); border-top: 1px solid var(--sand-border); padding-top: 10px; margin-top: 4px; }
 
     .btn-submit {
       background: linear-gradient(135deg, #c5a059 0%, #8c672f 100%);
       color: #ffffff;
       border: none;
-      padding: 16px;
+      padding: 15px;
       border-radius: 8px;
       font-weight: 600;
       font-size: 14px;
       letter-spacing: 0.5px;
       width: 100%;
       cursor: pointer;
-      margin-top: 22px;
+      margin-top: 20px;
       box-shadow: 0 4px 15px rgba(140,103,47,0.2);
       transition: all 0.2s ease;
     }
@@ -193,17 +233,29 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* Histórico */
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 25px; }
-    .summary-card { background: var(--sand-light); border: 1px solid var(--sand-border); border-radius: 12px; padding: 18px; text-align: center; }
+    /* Histórico e Filtros por Data */
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .summary-card { background: var(--sand-light); border: 1px solid var(--sand-border); border-radius: 12px; padding: 16px; text-align: center; }
     .summary-card .title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
-    .summary-card .value { font-size: 22px; font-weight: 700; color: var(--gold-dark); margin-top: 6px; }
+    .summary-card .value { font-size: 20px; font-weight: 700; color: var(--gold-dark); margin-top: 6px; }
 
-    .filter-bar { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 22px; align-items: center; }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center; }
+    .btn-filter-quick {
+      padding: 9px 13px;
+      background: var(--bg-card);
+      border: 1px solid var(--sand-border);
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+    .btn-filter-quick.active, .btn-filter-quick:hover { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
 
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 750px; }
-    th, td { padding: 14px; text-align: center; border-bottom: 1px solid var(--sand-border); }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 800px; }
+    th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--sand-border); }
     th { background-color: var(--sand-light); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.8px; }
 
     .badge-status {
@@ -219,19 +271,31 @@
       background: var(--sand-light);
       border: 1px solid var(--sand-border);
       color: var(--gold-dark);
-      padding: 6px 12px;
+      padding: 5px 10px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
       font-weight: 600;
-      margin-right: 4px;
+      margin-right: 2px;
     }
 
     .btn-action-approve {
       background: var(--gold-primary);
       border: none;
       color: #fff;
-      padding: 6px 12px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      margin-right: 2px;
+    }
+
+    .btn-action-delete {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 5px 10px;
       border-radius: 6px;
       cursor: pointer;
       font-size: 11px;
@@ -241,7 +305,7 @@
     @media (max-width: 768px) {
       .dynamic-row, .payment-row, .labels-header { grid-template-columns: 1fr 1fr; gap: 8px; }
       .labels-header { display: none; }
-      .header-container { flex-direction: column; gap: 16px; text-align: center; }
+      .header-container { flex-direction: column; gap: 14px; text-align: center; }
       .logo-area { flex-direction: column; }
     }
   </style>
@@ -267,9 +331,21 @@
           <div class="logo-subtitle">Comanda Digital de Atendimento</div>
         </div>
       </div>
-      <div class="nav-buttons">
-        <button class="btn-nav active" onclick="switchTab('comanda', this)"><i class="fa-solid fa-plus-circle"></i> Nova Venda / Comanda</button>
-        <button class="btn-nav" onclick="switchTab('historico', this)"><i class="fa-solid fa-receipt"></i> Recepção / Financeiro</button>
+
+      <div class="header-actions">
+        <!-- Modo de Acesso / Níveis de Permissão -->
+        <div class="user-access-badge">
+          <i class="fa-solid fa-user-shield"></i> Perfil:
+          <select id="user-role" onchange="alterarPerfilAcesso()">
+            <option value="recepcao">Recepção / Profissional</option>
+            <option value="admin">Thiago (Administrador)</option>
+          </select>
+        </div>
+
+        <div class="nav-buttons">
+          <button class="btn-nav active" onclick="switchTab('comanda', this)"><i class="fa-solid fa-plus-circle"></i> Nova Venda</button>
+          <button class="btn-nav" onclick="switchTab('historico', this)"><i class="fa-solid fa-receipt"></i> Recepção / Financeiro</button>
+        </div>
       </div>
     </div>
   </header>
@@ -370,13 +446,24 @@
             </button>
           </div>
 
-          <!-- BLOCO 3: TOTALIZADORES -->
+          <!-- BLOCO 3: TOTALIZADORES & CÁLCULO DE RESTANTE -->
           <div class="totals-summary">
             <div class="total-line">
-              <span>Total Bruto:</span>
+              <span>Total Bruto (Itens):</span>
               <span id="lbl-total-bruto">R$ 0,00</span>
             </div>
             <div class="total-line">
+              <span>Total Lançado (Pagamentos):</span>
+              <span id="lbl-total-pago-lancado">R$ 0,00</span>
+            </div>
+
+            <!-- INDICADOR DE FALTA PAGAR -->
+            <div class="total-line restante" id="box-restante">
+              <span>Falta Pagar / Restante:</span>
+              <span id="lbl-restante">R$ 0,00</span>
+            </div>
+
+            <div class="total-line" style="margin-top: 6px;">
               <span>Taxas de Maquininha (R$):</span>
               <input type="number" step="0.01" id="taxas_maquininha" value="0.00" style="width: 110px; text-align: right;" oninput="calcularGeral()">
             </div>
@@ -395,20 +482,32 @@
     <div id="tab-historico" class="tab-content">
       <div class="summary-grid">
         <div class="summary-card">
-          <div class="title">Total Faturado</div>
+          <div class="title">Total Faturado (Período)</div>
           <div class="value" id="total-faturado">R$ 0,00</div>
         </div>
         <div class="summary-card">
-          <div class="title">Total Líquido</div>
+          <div class="title">Total Líquido (Período)</div>
           <div class="value" style="color: #2e7d32;" id="total-liquido-card">R$ 0,00</div>
         </div>
       </div>
 
       <div class="card">
         <div class="card-title">Comandas Registradas</div>
+        
+        <!-- BARRA DE BUSCA E FILTROS DE DATA -->
         <div class="filter-bar">
           <input type="text" id="search-paciente" placeholder="🔍 Buscar cliente..." onkeyup="filtrarComandas()">
+          
+          <button class="btn-filter-quick active" id="btn-f-hoje" onclick="setFiltroData('hoje', this)">Hoje</button>
+          <button class="btn-filter-quick" id="btn-f-mes" onclick="setFiltroData('mes', this)">Este Mês</button>
+          <button class="btn-filter-quick" id="btn-f-todos" onclick="setFiltroData('todos', this)">Todas as Datas</button>
+
+          <div style="display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted);">
+            <input type="date" id="filtro-data-inicio" onchange="setFiltroData('custom', null)"> até
+            <input type="date" id="filtro-data-fim" onchange="setFiltroData('custom', null)">
+          </div>
         </div>
+
         <div class="table-responsive">
           <table>
             <thead>
@@ -435,6 +534,7 @@
   <script>
     document.getElementById('data_venda').valueAsDate = new Date();
     let comandasDados = [];
+    let filtroPeriodoAtual = 'hoje';
 
     window.onload = function() {
       addItemRow();
@@ -446,6 +546,11 @@
       document.querySelectorAll('.btn-nav').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-' + tab).classList.add('active');
       if(btn) btn.classList.add('active');
+      if(tab === 'historico') renderizarHistorico();
+    }
+
+    function alterarPerfilAcesso() {
+      renderizarHistorico();
     }
 
     function addItemRow(nome = '', qtd = 1, valor = '0.00', desc = '0.00') {
@@ -503,6 +608,7 @@
       calcularGeral();
     }
 
+    // CÁLCULO GERAL E APURAÇÃO DO "RESTANTE / FALTA PAGAR"
     function calcularGeral() {
       let totalBruto = 0;
       document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
@@ -514,11 +620,27 @@
         totalBruto += subtotal;
       });
 
+      let totalPagoLancado = 0;
+      document.querySelectorAll('#payments-container .payment-row').forEach(row => {
+        totalPagoLancado += parseFloat(row.querySelector('.pay-valor').value) || 0;
+      });
+
+      const restante = Math.max(0, totalBruto - totalPagoLancado);
       const taxas = parseFloat(document.getElementById('taxas_maquininha').value) || 0;
       const totalLiquido = Math.max(0, totalBruto - taxas);
 
       document.getElementById('lbl-total-bruto').innerText = 'R$ ' + totalBruto.toFixed(2);
+      document.getElementById('lbl-total-pago-lancado').innerText = 'R$ ' + totalPagoLancado.toFixed(2);
+      document.getElementById('lbl-restante').innerText = 'R$ ' + restante.toFixed(2);
       document.getElementById('lbl-total-liquido').innerText = 'R$ ' + totalLiquido.toFixed(2);
+
+      const boxRestante = document.getElementById('box-restante');
+      if (restante === 0 && totalBruto > 0) {
+        boxRestante.classList.add('pago-zero');
+        document.getElementById('lbl-restante').innerText = 'R$ 0,00 (Total Quitado)';
+      } else {
+        boxRestante.classList.remove('pago-zero');
+      }
     }
 
     function capturarItensFormulario() {
@@ -554,6 +676,7 @@
       const editIndex = parseInt(document.getElementById('edit_index').value);
       const cliente = document.getElementById('paciente').value;
       const totalBrutoStr = document.getElementById('lbl-total-bruto').innerText;
+      const totalLiquidoStr = document.getElementById('lbl-total-liquido').innerText;
 
       const novaVenda = {
         data: document.getElementById('data_venda').value,
@@ -566,6 +689,7 @@
         itens: capturarItensFormulario(),
         pagamentos: capturarPagamentosFormulario(),
         total: totalBrutoStr,
+        totalLiquido: totalLiquidoStr,
         status: editIndex >= 0 ? comandasDados[editIndex].status : 'Pendente de Aprovação'
       };
 
@@ -594,17 +718,65 @@
       addPaymentRow();
     }
 
+    // FILTROS DE DATA
+    function setFiltroData(tipo, btn) {
+      filtroPeriodoAtual = tipo;
+      document.querySelectorAll('.btn-filter-quick').forEach(b => b.classList.remove('active'));
+      if(btn) btn.classList.add('active');
+      renderizarHistorico();
+    }
+
     function renderizarHistorico() {
       const tbody = document.getElementById('lista-comandas-body');
       tbody.innerHTML = '';
 
-      if(comandasDados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma comanda gravada ainda.</td></tr>';
+      const termo = document.getElementById('search-paciente').value.toLowerCase();
+      const userRole = document.getElementById('user-role').value;
+      const hojeStr = new Date().toISOString().split('T')[0];
+      const mesAtualStr = hojeStr.substring(0, 7);
+
+      const dataInicio = document.getElementById('filtro-data-inicio').value;
+      const dataFim = document.getElementById('filtro-data-fim').value;
+
+      let filtradas = comandasDados.filter(c => {
+        const matchNome = c.cliente.toLowerCase().includes(termo);
+        let matchData = true;
+
+        if (filtroPeriodoAtual === 'hoje') {
+          matchData = (c.data === hojeStr);
+        } else if (filtroPeriodoAtual === 'mes') {
+          matchData = c.data.startsWith(mesAtualStr);
+        } else if (filtroPeriodoAtual === 'custom' && dataInicio && dataFim) {
+          matchData = (c.data >= dataInicio && c.data <= dataFim);
+        }
+
+        return matchNome && matchData;
+      });
+
+      if(filtradas.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma comanda encontrada para este filtro.</td></tr>';
+        atualizarCardsResumo(0, 0);
         return;
       }
 
-      comandasDados.forEach((c, idx) => {
+      let sumFat = 0, sumLiq = 0;
+
+      filtradas.forEach((c) => {
+        const indexReal = comandasDados.indexOf(c);
         const badgeClass = c.status === 'Aprovado (Thiago)' ? 'badge-aprovado' : 'badge-pendente';
+
+        const valBruto = parseFloat(c.total.replace('R$', '').replace('.', '').replace(',', '.')) || 0;
+        const valLiq = parseFloat((c.totalLiquido || c.total).replace('R$', '').replace('.', '').replace(',', '.')) || 0;
+
+        sumFat += valBruto;
+        sumLiq += valLiq;
+
+        const btnApprove = (userRole === 'admin' && c.status !== 'Aprovado (Thiago)') 
+          ? `<button class="btn-action-approve" onclick="aprovarComanda(${indexReal})"><i class="fa-solid fa-check"></i> Aprovar</button>` : '';
+
+        const btnDelete = (userRole === 'admin') 
+          ? `<button class="btn-action-delete" onclick="excluirComanda(${indexReal})"><i class="fa-solid fa-trash"></i> Apagar</button>` : '';
+
         const row = `
           <tr>
             <td>${c.data}</td>
@@ -614,19 +786,26 @@
             <td><strong>${c.total}</strong></td>
             <td><span class="badge-status ${badgeClass}">${c.status}</span></td>
             <td>
-              <button class="btn-action-edit" onclick="editarComanda(${idx})"><i class="fa-solid fa-pen"></i> Editar</button>
-              ${c.status !== 'Aprovado (Thiago)' ? `<button class="btn-action-approve" onclick="aprovarComanda(${idx})"><i class="fa-solid fa-check"></i> Aprovar</button>` : ''}
+              <button class="btn-action-edit" onclick="editarComanda(${indexReal})"><i class="fa-solid fa-pen"></i> Editar</button>
+              ${btnApprove}
+              ${btnDelete}
             </td>
           </tr>
         `;
         tbody.innerHTML += row;
       });
+
+      atualizarCardsResumo(sumFat, sumLiq);
+    }
+
+    function atualizarCardsResumo(fat, liq) {
+      document.getElementById('total-faturado').innerText = 'R$ ' + fat.toFixed(2);
+      document.getElementById('total-liquido-card').innerText = 'R$ ' + liq.toFixed(2);
     }
 
     function editarComanda(index) {
       const c = comandasDados[index];
       
-      // Preencher dados gerais
       document.getElementById('edit_index').value = index;
       document.getElementById('paciente').value = c.cliente;
       document.getElementById('vendedor').value = c.vendedor;
@@ -636,7 +815,6 @@
       document.getElementById('proximo_atendimento').value = c.proximo_atendimento || '';
       document.getElementById('taxas_maquininha').value = c.taxas_maquininha || '0.00';
 
-      // Reconstruir lista de procedimentos/produtos salvos
       document.getElementById('items-container').innerHTML = '';
       if(c.itens && c.itens.length > 0) {
         c.itens.forEach(it => addItemRow(it.nome, it.qtd, it.valor, it.desc));
@@ -644,7 +822,6 @@
         addItemRow();
       }
 
-      // Reconstruir lista de pagamentos salvos
       document.getElementById('payments-container').innerHTML = '';
       if(c.pagamentos && c.pagamentos.length > 0) {
         c.pagamentos.forEach(p => addPaymentRow(p.valor, p.metodo, p.conta, p.vencimento, p.parcelas));
@@ -661,36 +838,21 @@
 
     function aprovarComanda(index) {
       comandasDados[index].status = 'Aprovado (Thiago)';
-      alert('Comanda aprovada com sucesso por Thiago!');
+      alert('Comanda de ' + comandasDados[index].cliente + ' aprovada!');
       renderizarHistorico();
     }
 
-    function filtrarComandas() {
-      const termo = document.getElementById('search-paciente').value.toLowerCase();
-      const filtradas = comandasDados.filter(c => c.cliente.toLowerCase().includes(termo));
-      renderizarHistoricoFiltrado(filtradas);
+    function excluirComanda(index) {
+      const cliente = comandasDados[index].cliente;
+      if (confirm('Tem certeza que deseja apagar a comanda de "' + cliente + '"? Essa ação não poderá ser desfeita.')) {
+        comandasDados.splice(index, 1);
+        alert('Comanda removida!');
+        renderizarHistorico();
+      }
     }
 
-    function renderizarHistoricoFiltrado(dados) {
-      const tbody = document.getElementById('lista-comandas-body');
-      tbody.innerHTML = '';
-      dados.forEach((c, idx) => {
-        const badgeClass = c.status === 'Aprovado (Thiago)' ? 'badge-aprovado' : 'badge-pendente';
-        const row = `
-          <tr>
-            <td>${c.data}</td>
-            <td><strong>${c.cliente}</strong></td>
-            <td>${c.vendedor}</td>
-            <td>${c.categoria}</td>
-            <td><strong>${c.total}</strong></td>
-            <td><span class="badge-status ${badgeClass}">${c.status}</span></td>
-            <td>
-              <button class="btn-action-edit" onclick="editarComanda(${idx})"><i class="fa-solid fa-pen"></i> Editar</button>
-            </td>
-          </tr>
-        `;
-        tbody.innerHTML += row;
-      });
+    function filtrarComandas() {
+      renderizarHistorico();
     }
   </script>
 </body>
