@@ -17,7 +17,8 @@
       --gold-dark: #8c672f;
       --text-main: #3a322d;
       --text-muted: #8c827a;
-      --danger: #c65911;
+      --danger: #dc2626;
+      --success: #2e7d32;
       --info-blue: #2563eb;
       --info-blue-bg: #dbeafe;
     }
@@ -31,7 +32,7 @@
       padding: 18px 20px;
     }
     .header-container {
-      max-width: 1050px;
+      max-width: 1100px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -45,19 +46,6 @@
     .logo-subtitle { font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1.5px; }
 
     .header-actions { display: flex; align-items: center; gap: 12px; }
-
-    .user-access-badge {
-      background: #ffffff;
-      border: 1px solid var(--sand-border);
-      border-radius: 8px;
-      padding: 8px 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--gold-dark);
-    }
 
     .nav-buttons { display: flex; gap: 8px; }
     .btn-nav {
@@ -76,7 +64,7 @@
     }
     .btn-nav:hover, .btn-nav.active { background: var(--gold-primary); color: #ffffff; border-color: var(--gold-primary); }
 
-    .container { max-width: 1050px; margin: 25px auto; padding: 0 18px; }
+    .container { max-width: 1100px; margin: 25px auto; padding: 0 18px; }
     .card {
       background: var(--bg-card);
       border-radius: 16px;
@@ -112,14 +100,6 @@
       color: var(--text-main);
       outline: none;
       transition: all 0.2s ease;
-    }
-    
-    input[type="date"], #data_venda { text-align: center; }
-
-    input:focus, select:focus, textarea:focus { 
-      border-color: var(--gold-primary); 
-      background-color: #ffffff; 
-      box-shadow: 0 0 0 3px rgba(197,160,89,0.12); 
     }
 
     .section-block { margin-top: 25px; padding-top: 16px; border-top: 1px dashed var(--sand-border); }
@@ -165,16 +145,8 @@
       border-radius: 8px;
       transition: all 0.2s;
     }
-    .btn-add-item:hover { background-color: var(--sand-border); }
 
-    .btn-remove-row {
-      background: none;
-      border: none;
-      color: var(--danger);
-      cursor: pointer;
-      font-size: 15px;
-      text-align: center;
-    }
+    .btn-remove-row { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 15px; text-align: center; }
 
     .totals-summary {
       background-color: var(--sand-light);
@@ -187,20 +159,8 @@
       gap: 8px;
     }
     .total-line { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-muted); }
-    .total-line.restante {
-      background: #fff3cd;
-      border: 1px solid #ffeeba;
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: #856404;
-      font-weight: 700;
-      margin-top: 4px;
-    }
-    .total-line.restante.pago-zero {
-      background: #d4edda;
-      border-color: #c3e6cb;
-      color: #155724;
-    }
+    .total-line.restante { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 10px 14px; color: #856404; font-weight: 700; margin-top: 4px; }
+    .total-line.restante.pago-zero { background: #d4edda; border-color: #c3e6cb; color: #155724; }
     .total-line.main { font-size: 18px; font-weight: 700; color: var(--gold-dark); border-top: 1px solid var(--sand-border); padding-top: 10px; margin-top: 4px; }
 
     .btn-submit {
@@ -211,83 +171,37 @@
       border-radius: 8px;
       font-weight: 600;
       font-size: 14px;
-      letter-spacing: 0.5px;
       width: 100%;
       cursor: pointer;
       margin-top: 20px;
-      box-shadow: 0 4px 15px rgba(140,103,47,0.2);
-      transition: all 0.2s ease;
     }
-    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(140,103,47,0.3); }
 
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 22px; }
-    .summary-card { background: var(--sand-light); border: 1px solid var(--sand-border); border-radius: 12px; padding: 16px; text-align: center; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .summary-card { background: var(--bg-card); border: 1px solid var(--sand-border); border-radius: 12px; padding: 18px; text-align: center; }
     .summary-card .title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
-    .summary-card .value { font-size: 20px; font-weight: 700; color: var(--gold-dark); margin-top: 6px; }
-
-    .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center; }
-    .btn-filter-quick {
-      padding: 9px 13px;
-      background: var(--bg-card);
-      border: 1px solid var(--sand-border);
-      border-radius: 8px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      color: var(--text-main);
-      transition: all 0.2s;
-    }
-    .btn-filter-quick.active, .btn-filter-quick:hover { background: var(--gold-primary); color: #fff; border-color: var(--gold-primary); }
+    .summary-card .value { font-size: 22px; font-weight: 700; color: var(--gold-dark); margin-top: 6px; }
 
     .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; min-width: 850px; }
     th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--sand-border); }
-    th { background-color: var(--sand-light); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.8px; }
+    th { background-color: var(--sand-light); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; }
 
-    .badge-status {
-      padding: 5px 10px;
-      border-radius: 12px;
-      font-size: 10px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
+    .badge-status { padding: 5px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
     .badge-cabine { background-color: #fef3c7; color: #b45309; }
     .badge-recepcao { background-color: var(--info-blue-bg); color: var(--info-blue); }
     .badge-aprovado { background-color: #dcfce7; color: #15803d; }
 
-    .btn-action-edit {
-      background: var(--sand-light);
-      border: 1px solid var(--sand-border);
-      color: var(--gold-dark);
-      padding: 5px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .btn-action-check {
-      background: var(--info-blue);
-      border: none;
-      color: #fff;
-      padding: 5px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 600;
-      margin-left: 4px;
-    }
+    .btn-action-approve { background: var(--gold-primary); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; }
+    .btn-action-delete { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-left: 4px; }
+    .btn-action-check { background: var(--info-blue); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; }
 
     @media (max-width: 768px) {
       .dynamic-row, .payment-row, .labels-header { grid-template-columns: 1fr 1fr; gap: 8px; }
       .labels-header { display: none; }
       .header-container { flex-direction: column; gap: 14px; text-align: center; }
-      .logo-area { flex-direction: column; }
     }
   </style>
 </head>
@@ -314,13 +228,10 @@
       </div>
 
       <div class="header-actions">
-        <div class="user-access-badge">
-          <i class="fa-solid fa-user-check"></i> Recepção / Profissional
-        </div>
-
         <div class="nav-buttons">
           <button class="btn-nav active" onclick="switchTab('comanda', this)"><i class="fa-solid fa-plus-circle"></i> Nova Venda</button>
-          <button class="btn-nav" onclick="switchTab('historico', this)"><i class="fa-solid fa-receipt"></i> Recepção / Histórico</button>
+          <button class="btn-nav" onclick="switchTab('recepcao', this)"><i class="fa-solid fa-check-double"></i> Recepção</button>
+          <button class="btn-nav" style="border-color: var(--gold-primary); color: var(--gold-dark);" onclick="acessarFinanceiro(this)"><i class="fa-solid fa-lock"></i> Financeiro (Thiago)</button>
         </div>
       </div>
     </div>
@@ -328,11 +239,11 @@
 
   <div class="container">
     
+    <!-- ABA 1: NOVA VENDA -->
     <div id="tab-comanda" class="tab-content active">
       <div class="card">
         <div class="card-title">
           <span id="form-title">Nova Venda Personalizada</span>
-          <small id="edit-indicator" style="display:none; font-size:12px; color: var(--gold-dark); font-family:'Montserrat';">(Modo Edição)</small>
         </div>
         
         <form id="formComanda" onsubmit="salvarComanda(event)">
@@ -379,69 +290,28 @@
             </div>
             <div class="form-group">
               <label>Próximo Atendimento</label>
-              <input type="text" id="proximo_atendimento" placeholder="Ex: Retorno em 15 dias (10/10 às 14h)">
+              <input type="text" id="proximo_atendimento" placeholder="Ex: Retorno em 15 dias">
             </div>
           </div>
 
           <div class="section-block">
             <div class="section-block-title">Procedimentos / Produtos</div>
-            
-            <div class="labels-header">
-              <span>Nome / Descrição do Item</span>
-              <span>Qtd</span>
-              <span>Valor Unit. (R$)</span>
-              <span>Desconto (R$)</span>
-              <span>Total Item (R$)</span>
-              <span></span>
-            </div>
-
             <div id="items-container"></div>
-            <button type="button" class="btn-add-item" onclick="addItemRow()">
-              <i class="fa-solid fa-plus"></i> Adicionar Procedimento/Produto
-            </button>
+            <button type="button" class="btn-add-item" onclick="addItemRow()"><i class="fa-solid fa-plus"></i> Adicionar Item</button>
           </div>
 
           <div class="section-block">
             <div class="section-block-title">Recebimento (Múltiplas Formas)</div>
-            
-            <div class="labels-header">
-              <span>Valor (R$)</span>
-              <span>Método / Bandeira</span>
-              <span>Conta Destino</span>
-              <span>Vencimento</span>
-              <span>Parcelas</span>
-              <span></span>
-            </div>
-
             <div id="payments-container"></div>
-            <button type="button" class="btn-add-item" onclick="addPaymentRow()">
-              <i class="fa-solid fa-plus"></i> Adicionar Forma de Pagamento
-            </button>
+            <button type="button" class="btn-add-item" onclick="addPaymentRow()"><i class="fa-solid fa-plus"></i> Adicionar Pagamento</button>
           </div>
 
           <div class="totals-summary">
-            <div class="total-line">
-              <span>Total Bruto (Itens):</span>
-              <span id="lbl-total-bruto">R$ 0,00</span>
-            </div>
-            <div class="total-line">
-              <span>Total Lançado (Pagamentos):</span>
-              <span id="lbl-total-pago-lancado">R$ 0,00</span>
-            </div>
-
-            <div class="total-line restante" id="box-restante">
-              <span>Falta Pagar / Restante:</span>
-              <span id="lbl-restante">R$ 0,00</span>
-            </div>
-
-            <div class="total-line" style="margin-top: 6px;">
-              <span>Taxas de Maquininha (Rede Calculada):</span>
-              <span id="lbl-taxas-calculadas" style="color: var(--danger); font-weight:600;">R$ 0,00</span>
-            </div>
-            <div class="total-line main">
-              <span>Total Líquido Estimado:</span>
-              <span id="lbl-total-liquido">R$ 0,00</span>
-            </div>
+            <div class="total-line"><span>Total Bruto:</span><span id="lbl-total-bruto">R$ 0,00</span></div>
+            <div class="total-line"><span>Total Lançado:</span><span id="lbl-total-pago-lancado">R$ 0,00</span></div>
+            <div class="total-line restante" id="box-restante"><span>Falta Pagar:</span><span id="lbl-restante">R$ 0,00</span></div>
+            <div class="total-line" style="margin-top: 6px;"><span>Taxas de Maquininha (Rede):</span><span id="lbl-taxas-calculadas" style="color: var(--danger); font-weight:600;">R$ 0,00</span></div>
+            <div class="total-line main"><span>Total Líquido Estimado:</span><span id="lbl-total-liquido">R$ 0,00</span></div>
           </div>
 
           <button type="submit" class="btn-submit" id="btn-save-main"><i class="fa-solid fa-check-circle"></i> Gravar Comanda</button>
@@ -449,34 +319,10 @@
       </div>
     </div>
 
-    <div id="tab-historico" class="tab-content">
-      <div class="summary-grid">
-        <div class="summary-card">
-          <div class="title">Total Faturado (Bruto)</div>
-          <div class="value" id="total-faturado">R$ 0,00</div>
-        </div>
-        <div class="summary-card">
-          <div class="title">Total Líquido (Estimado)</div>
-          <div class="value" style="color: #2e7d32;" id="total-liquido-card">R$ 0,00</div>
-        </div>
-      </div>
-
+    <!-- ABA 2: RECEPÇÃO (CHECK DE PAGAMENTO) -->
+    <div id="tab-recepcao" class="tab-content">
       <div class="card">
-        <div class="card-title">Comandas Registradas</div>
-        
-        <div class="filter-bar">
-          <input type="text" id="search-paciente" placeholder="🔍 Buscar cliente..." onkeyup="filtrarComandas()">
-          
-          <button class="btn-filter-quick active" id="btn-f-hoje" onclick="setFiltroData('hoje', this)">Hoje</button>
-          <button class="btn-filter-quick" id="btn-f-mes" onclick="setFiltroData('mes', this)">Este Mês</button>
-          <button class="btn-filter-quick" id="btn-f-todos" onclick="setFiltroData('todos', this)">Todas as Datas</button>
-
-          <div style="display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-muted);">
-            <input type="date" id="filtro-data-inicio" onchange="setFiltroData('custom', null)"> até
-            <input type="date" id="filtro-data-fim" onchange="setFiltroData('custom', null)">
-          </div>
-        </div>
-
+        <div class="card-title">Fila de Conferência da Recepção</div>
         <div class="table-responsive">
           <table>
             <thead>
@@ -484,14 +330,53 @@
                 <th>Data</th>
                 <th>Cliente</th>
                 <th>Vendedor</th>
-                <th>Categoria</th>
                 <th>Valor Total</th>
                 <th>Status</th>
-                <th>Ações</th>
+                <th>Ação Recepção</th>
               </tr>
             </thead>
-            <tbody id="lista-comandas-body">
-              <tr><td colspan="7" style="text-align:center; color: var(--text-muted);">Nenhuma comanda gravada ainda.</td></tr>
+            <tbody id="lista-recepcao-body">
+              <tr><td colspan="6" style="text-align:center;">Carregando comandas...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABA 3: FINANCEIRO EXCLUSIVO (THIAGO) -->
+    <div id="tab-financeiro" class="tab-content">
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="title">Total Faturado (Bruto)</div>
+          <div class="value" id="fin-faturado">R$ 0,00</div>
+        </div>
+        <div class="summary-card">
+          <div class="title">Taxas de Maquininha (Rede)</div>
+          <div class="value" style="color: var(--danger);" id="fin-taxas">R$ 0,00</div>
+        </div>
+        <div class="summary-card">
+          <div class="title">Receita Líquida Real</div>
+          <div class="value" style="color: var(--success);" id="fin-liquido">R$ 0,00</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Painel de Gestão e Aprovação (Thiago)</div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Cliente</th>
+                <th>Vendedor</th>
+                <th>Valor Bruto</th>
+                <th>Valor Líquido</th>
+                <th>Status</th>
+                <th>Ações Financeiro</th>
+              </tr>
+            </thead>
+            <tbody id="lista-financeiro-body">
+              <tr><td colspan="7" style="text-align:center;">Nenhuma comanda para aprovação.</td></tr>
             </tbody>
           </table>
         </div>
@@ -501,14 +386,13 @@
   </div>
 
   <script>
-    // SUPABASE DIRECT CLIENT INTEGRATION
     const SUPABASE_URL = 'https://ntvcgqbenpxfxvejxkoy.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_UxiIkEbCXmYA10M0f_PIoA_1j52p3gB';
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    document.getElementById('data_venda').valueAsDate = new Date();
     let comandasDados = [];
-    let filtroPeriodoAtual = 'hoje';
+    let financeiroDesbloqueado = false;
+    const SENHA_MESTRE = "1234"; // SUA SENHA DE ACESSO AO FINANCEIRO
 
     const TAXAS_REDE = {
       'Mastercard': { 'Débito à vista': 1.09, 'A vista': 2.29, '2x': 4.21, '3x': 4.85, '4x': 5.49, '5x': 6.13, '6x': 6.77, '7x': 7.61, '8x': 8.25, '9x': 8.89, '10x': 9.53, '11x': 10.17, '12x': 10.81 },
@@ -518,11 +402,10 @@
       'Outras bandeiras': { 'Débito à vista': 1.49, 'A vista': 2.59, '2x': 5.01, '3x': 5.65, '4x': 6.29, '5x': 6.93, '6x': 7.57, '7x': 8.41, '8x': 9.05, '9x': 9.69, '10x': 10.33, '11x': 10.97, '12x': 11.61 }
     };
 
-    function formatarMoeda(valor) {
-      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(valor || 0);
-    }
+    function formatarMoeda(v) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0); }
 
     window.onload = function() {
+      document.getElementById('data_venda').valueAsDate = new Date();
       addItemRow();
       addPaymentRow();
       carregarComandasInicial();
@@ -530,32 +413,27 @@
     };
 
     async function carregarComandasInicial() {
-      const { data, error } = await supabaseClient
-        .from('comandas')
-        .select('*')
-        .order('created_at', { ascending: false });
-
+      const { data, error } = await supabaseClient.from('comandas').select('*').order('created_at', { ascending: false });
       if (!error && data) {
         comandasDados = data;
-        renderizarHistorico();
+        renderizarRecepcao();
+        if(financeiroDesbloqueado) renderizarFinanceiro();
       }
     }
 
     function ativarRealtimeSupabase() {
-      supabaseClient
-        .channel('public:comandas')
+      supabaseClient.channel('realtime:comandas')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'comandas' }, payload => {
-          if (payload.eventType === 'INSERT') {
-            comandasDados.unshift(payload.new);
-          } else if (payload.eventType === 'UPDATE') {
+          if (payload.eventType === 'INSERT') comandasDados.unshift(payload.new);
+          else if (payload.eventType === 'UPDATE') {
             const idx = comandasDados.findIndex(c => c.id === payload.new.id);
             if (idx >= 0) comandasDados[idx] = payload.new;
           } else if (payload.eventType === 'DELETE') {
             comandasDados = comandasDados.filter(c => c.id !== payload.old.id);
           }
-          renderizarHistorico();
-        })
-        .subscribe();
+          renderizarRecepcao();
+          if(financeiroDesbloqueado) renderizarFinanceiro();
+        }).subscribe();
     }
 
     function switchTab(tab, btn) {
@@ -563,336 +441,202 @@
       document.querySelectorAll('.btn-nav').forEach(el => el.classList.remove('active'));
       document.getElementById('tab-' + tab).classList.add('active');
       if(btn) btn.classList.add('active');
-      if(tab === 'historico') renderizarHistorico();
     }
 
-    function addItemRow(nome = '', qtd = 1, valor = '0.00', desc = '0.00') {
+    function acessarFinanceiro(btn) {
+      if (!financeiroDesbloqueado) {
+        const pin = prompt("Digite a senha do Financeiro:");
+        if (pin === SENHA_MESTRE) {
+          financeiroDesbloqueado = true;
+          alert("Acesso concedido!");
+        } else {
+          alert("Senha incorreta!");
+          return;
+        }
+      }
+      switchTab('financeiro', btn);
+      renderizarFinanceiro();
+    }
+
+    function addItemRow() {
       const container = document.getElementById('items-container');
       const div = document.createElement('div');
       div.className = 'dynamic-row';
       div.innerHTML = `
-        <input type="text" placeholder="Procedimento ou Produto" class="item-nome" value="${nome}" required>
-        <input type="number" placeholder="Qtd" class="item-qtd" value="${qtd}" min="1" oninput="calcularGeral()">
-        <input type="number" step="0.01" placeholder="Valor" class="item-valor" value="${valor}" oninput="calcularGeral()">
-        <input type="number" step="0.01" placeholder="Desc." class="item-desc" value="${desc}" oninput="calcularGeral()">
+        <input type="text" placeholder="Procedimento ou Produto" class="item-nome" required>
+        <input type="number" placeholder="Qtd" class="item-qtd" value="1" min="1" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Valor" class="item-valor" value="0.00" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Desc." class="item-desc" value="0.00" oninput="calcularGeral()">
         <input type="text" placeholder="Total" class="item-total" value="R$ 0,00" readonly>
-        <button type="button" class="btn-remove-row" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
+        <button type="button" class="btn-remove-row" onclick="this.parentElement.remove(); calcularGeral();"><i class="fa-solid fa-trash"></i></button>
       `;
       container.appendChild(div);
       calcularGeral();
     }
 
-    function addPaymentRow(valor = '0.00', metodo = 'Mastercard', conta = 'ITAÚ', vencimento = '', parcelas = 'A vista') {
+    function addPaymentRow() {
       const container = document.getElementById('payments-container');
       const div = document.createElement('div');
       div.className = 'payment-row';
       div.innerHTML = `
-        <input type="number" step="0.01" placeholder="Valor" class="pay-valor" value="${valor}" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Valor" class="pay-valor" value="0.00" oninput="calcularGeral()">
         <select class="pay-metodo" onchange="calcularGeral()">
-          <option value="Mastercard" ${metodo==='Mastercard'?'selected':''}>Mastercard</option>
-          <option value="Visa" ${metodo==='Visa'?'selected':''}>Visa</option>
-          <option value="Amex" ${metodo==='Amex'?'selected':''}>Amex</option>
-          <option value="Elo" ${metodo==='Elo'?'selected':''}>Elo</option>
-          <option value="PIX" ${metodo==='PIX'?'selected':''}>PIX</option>
-          <option value="Dinheiro" ${metodo==='Dinheiro'?'selected':''}>Dinheiro</option>
+          <option value="Mastercard">Mastercard</option>
+          <option value="Visa">Visa</option>
+          <option value="Amex">Amex</option>
+          <option value="Elo">Elo</option>
+          <option value="PIX">PIX</option>
+          <option value="Dinheiro">Dinheiro</option>
         </select>
         <select class="pay-conta">
-          <option value="ITAÚ" ${conta==='ITAÚ'?'selected':''}>ITAÚ</option>
-          <option value="INTER" ${conta==='INTER'?'selected':''}>INTER</option>
-          <option value="CAIXINHA" ${conta==='CAIXINHA'?'selected':''}>CAIXINHA</option>
+          <option value="ITAÚ">ITAÚ</option>
+          <option value="INTER">INTER</option>
+          <option value="CAIXINHA">CAIXINHA</option>
         </select>
-        <input type="date" class="pay-vencimento" value="${vencimento}">
+        <input type="date" class="pay-vencimento">
         <select class="pay-parcelas" onchange="calcularGeral()">
-          <option value="A vista" ${parcelas==='A vista'?'selected':''}>A vista (1x)</option>
-          <option value="Débito à vista" ${parcelas==='Débito à vista'?'selected':''}>Débito à vista</option>
-          <option value="2x" ${parcelas==='2x'?'selected':''}>2x</option>
-          <option value="3x" ${parcelas==='3x'?'selected':''}>3x</option>
-          <option value="4x" ${parcelas==='4x'?'selected':''}>4x</option>
-          <option value="5x" ${parcelas==='5x'?'selected':''}>5x</option>
-          <option value="6x" ${parcelas==='6x'?'selected':''}>6x</option>
-          <option value="7x" ${parcelas==='7x'?'selected':''}>7x</option>
-          <option value="8x" ${parcelas==='8x'?'selected':''}>8x</option>
-          <option value="9x" ${parcelas==='9x'?'selected':''}>9x</option>
-          <option value="10x" ${parcelas==='10x'?'selected':''}>10x</option>
-          <option value="11x" ${parcelas==='11x'?'selected':''}>11x</option>
-          <option value="12x" ${parcelas==='12x'?'selected':''}>12x</option>
+          <option value="A vista">A vista (1x)</option>
+          <option value="Débito à vista">Débito à vista</option>
+          <option value="2x">2x</option><option value="3x">3x</option><option value="4x">4x</option><option value="5x">5x</option><option value="6x">6x</option>
         </select>
-        <button type="button" class="btn-remove-row" onclick="removeRow(this)"><i class="fa-solid fa-trash"></i></button>
+        <button type="button" class="btn-remove-row" onclick="this.parentElement.remove(); calcularGeral();"><i class="fa-solid fa-trash"></i></button>
       `;
       container.appendChild(div);
-      if(!vencimento) div.querySelector('.pay-vencimento').valueAsDate = new Date();
-      calcularGeral();
-    }
-
-    function removeRow(btn) {
-      btn.parentElement.remove();
+      div.querySelector('.pay-vencimento').valueAsDate = new Date();
       calcularGeral();
     }
 
     function calcularGeral() {
-      let totalBruto = 0;
+      let totalBruto = 0, totalPago = 0, totalTaxas = 0;
+
       document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
         const qtd = parseFloat(row.querySelector('.item-qtd').value) || 0;
         const val = parseFloat(row.querySelector('.item-valor').value) || 0;
         const desc = parseFloat(row.querySelector('.item-desc').value) || 0;
-        const subtotal = Math.max(0, (qtd * val) - desc);
-        row.querySelector('.item-total').value = formatarMoeda(subtotal);
-        totalBruto += subtotal;
+        const sub = Math.max(0, (qtd * val) - desc);
+        row.querySelector('.item-total').value = formatarMoeda(sub);
+        totalBruto += sub;
       });
-
-      let totalPagoLancado = 0;
-      let totalTaxasMaquininha = 0;
 
       document.querySelectorAll('#payments-container .payment-row').forEach(row => {
         const valPay = parseFloat(row.querySelector('.pay-valor').value) || 0;
         const metodo = row.querySelector('.pay-metodo').value;
         const parcelas = row.querySelector('.pay-parcelas').value;
-
-        totalPagoLancado += valPay;
+        totalPago += valPay;
 
         if (metodo !== 'PIX' && metodo !== 'Dinheiro' && valPay > 0) {
-          const tabBandeira = TAXAS_REDE[metodo] || TAXAS_REDE['Outras bandeiras'];
-          const pctTaxa = tabBandeira[parcelas] || 0;
-          totalTaxasMaquininha += (valPay * (pctTaxa / 100));
+          const tab = TAXAS_REDE[metodo] || TAXAS_REDE['Outras bandeiras'];
+          const pct = tab[parcelas] || 0;
+          totalTaxas += (valPay * (pct / 100));
         }
       });
 
-      const restante = Math.max(0, totalBruto - totalPagoLancado);
-      const totalLiquido = Math.max(0, totalBruto - totalTaxasMaquininha);
-
+      const restante = Math.max(0, totalBruto - totalPago);
       document.getElementById('lbl-total-bruto').innerText = formatarMoeda(totalBruto);
-      document.getElementById('lbl-total-pago-lancado').innerText = formatarMoeda(totalPagoLancado);
+      document.getElementById('lbl-total-pago-lancado').innerText = formatarMoeda(totalPago);
       document.getElementById('lbl-restante').innerText = formatarMoeda(restante);
-      document.getElementById('lbl-taxas-calculadas').innerText = formatarMoeda(totalTaxasMaquininha);
-      document.getElementById('lbl-total-liquido').innerText = formatarMoeda(totalLiquido);
-
-      const boxRestante = document.getElementById('box-restante');
-      if (restante === 0 && totalBruto > 0) {
-        boxRestante.classList.add('pago-zero');
-        document.getElementById('lbl-restante').innerText = 'R$ 0,00 (Total Quitado)';
-      } else {
-        boxRestante.classList.remove('pago-zero');
-      }
-    }
-
-    function capturarItensFormulario() {
-      const itens = [];
-      document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
-        itens.push({
-          nome: row.querySelector('.item-nome').value,
-          qtd: row.querySelector('.item-qtd').value,
-          valor: row.querySelector('.item-valor').value,
-          desc: row.querySelector('.item-desc').value
-        });
-      });
-      return itens;
-    }
-
-    function capturarPagamentosFormulario() {
-      const pagamentos = [];
-      document.querySelectorAll('#payments-container .payment-row').forEach(row => {
-        pagamentos.push({
-          valor: row.querySelector('.pay-valor').value,
-          metodo: row.querySelector('.pay-metodo').value,
-          conta: row.querySelector('.pay-conta').value,
-          vencimento: row.querySelector('.pay-vencimento').value,
-          parcelas: row.querySelector('.pay-parcelas').value
-        });
-      });
-      return pagamentos;
+      document.getElementById('lbl-taxas-calculadas').innerText = formatarMoeda(totalTaxas);
+      document.getElementById('lbl-total-liquido').innerText = formatarMoeda(Math.max(0, totalBruto - totalTaxas));
     }
 
     async function salvarComanda(e) {
       e.preventDefault();
-      
-      const editId = document.getElementById('edit_id').value;
-      const cliente = document.getElementById('paciente').value;
-      const btnSalvar = document.getElementById('btn-save-main');
+      const btn = document.getElementById('btn-save-main');
+      btn.disabled = true;
 
-      const novaVenda = {
+      const novaComanda = {
         data: document.getElementById('data_venda').value,
-        paciente: cliente,
+        paciente: document.getElementById('paciente').value,
         vendedor: document.getElementById('vendedor').value,
         categoria: document.getElementById('categoria').value,
         indicacao: document.getElementById('indicacao').value,
         proximo_atendimento: document.getElementById('proximo_atendimento').value,
-        itens: capturarItensFormulario(),
-        pagamentos: capturarPagamentosFormulario(),
         total: document.getElementById('lbl-total-bruto').innerText,
         total_liquido: document.getElementById('lbl-total-liquido').innerText,
         status: 'Lançado pela Cabine'
       };
 
-      btnSalvar.disabled = true;
-      btnSalvar.innerText = 'Enviando ao Supabase...';
+      const { error } = await supabaseClient.from('comandas').insert([novaComanda]);
+      btn.disabled = false;
 
-      try {
-        if (editId) {
-          const { error } = await supabaseClient.from('comandas').update(novaVenda).eq('id', editId);
-          if (error) throw error;
-          alert('Comanda de ' + cliente + ' atualizada!');
-        } else {
-          const { error } = await supabaseClient.from('comandas').insert([novaVenda]);
-          if (error) throw error;
-          alert('Comanda de ' + cliente + ' gravada no Supabase em tempo real!');
-        }
-
-        resetarFormulario();
-        switchTab('historico', document.querySelectorAll('.btn-nav')[1]);
-      } catch (erro) {
-        console.error('Erro ao salvar no Supabase:', erro);
-        alert('Erro ao salvar no banco de dados: ' + (erro.message || 'Verifique sua conexão.'));
-      } finally {
-        btnSalvar.disabled = false;
-        btnSalvar.innerHTML = '<i class="fa-solid fa-check-circle"></i> Gravar Comanda';
+      if (!error) {
+        alert('Comanda enviada com sucesso!');
+        document.getElementById('formComanda').reset();
+        document.getElementById('data_venda').valueAsDate = new Date();
+        switchTab('recepcao', document.querySelectorAll('.btn-nav')[1]);
+      } else {
+        alert('Erro ao salvar no banco: ' + error.message);
       }
     }
 
-    function resetarFormulario() {
-      document.getElementById('formComanda').reset();
-      document.getElementById('edit_id').value = "";
-      document.getElementById('form-title').innerText = "Nova Venda Personalizada";
-      document.getElementById('edit-indicator').style.display = "none";
-      document.getElementById('btn-save-main').innerHTML = '<i class="fa-solid fa-check-circle"></i> Gravar Comanda';
-      document.getElementById('data_venda').valueAsDate = new Date();
-      document.getElementById('items-container').innerHTML = '';
-      document.getElementById('payments-container').innerHTML = '';
-      addItemRow();
-      addPaymentRow();
-    }
-
-    function setFiltroData(tipo, btn) {
-      filtroPeriodoAtual = tipo;
-      document.querySelectorAll('.btn-filter-quick').forEach(b => b.classList.remove('active'));
-      if(btn) btn.classList.add('active');
-      renderizarHistorico();
-    }
-
-    function renderizarHistorico() {
-      const tbody = document.getElementById('lista-comandas-body');
+    function renderizarRecepcao() {
+      const tbody = document.getElementById('lista-recepcao-body');
       tbody.innerHTML = '';
-
-      const termo = document.getElementById('search-paciente').value.toLowerCase();
-      const hojeStr = new Date().toISOString().split('T')[0];
-      const mesAtualStr = hojeStr.substring(0, 7);
-
-      const dataInicio = document.getElementById('filtro-data-inicio').value;
-      const dataFim = document.getElementById('filtro-data-fim').value;
-
-      let filtradas = comandasDados.filter(c => {
-        const matchNome = (c.paciente || c.cliente || '').toLowerCase().includes(termo);
-        let matchData = true;
-
-        if (filtroPeriodoAtual === 'hoje') {
-          matchData = (c.data === hojeStr);
-        } else if (filtroPeriodoAtual === 'mes') {
-          matchData = c.data && c.data.startsWith(mesAtualStr);
-        } else if (filtroPeriodoAtual === 'custom' && dataInicio && dataFim) {
-          matchData = (c.data >= dataInicio && c.data <= dataFim);
-        }
-
-        return matchNome && matchData;
+      comandasDados.forEach(c => {
+        const row = `
+          <tr>
+            <td>${c.data}</td>
+            <td><strong>${c.paciente || c.cliente}</strong></td>
+            <td>${c.vendedor}</td>
+            <td>${c.total}</td>
+            <td><span class="badge-status badge-cabine">${c.status}</span></td>
+            <td>
+              ${c.status === 'Lançado pela Cabine' ? `<button class="btn-action-check" onclick="checkRecepcao('${c.id}')">Check Recepção</button>` : 'Conferido'}
+            </td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
       });
+    }
 
-      if(filtradas.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma comanda encontrada para este filtro.</td></tr>';
-        atualizarCardsResumo(0, 0);
-        return;
-      }
+    async function checkRecepcao(id) {
+      await supabaseClient.from('comandas').update({ status: 'Pagamento Conferido (Recepção)' }).eq('id', id);
+      alert('Conferência registrada!');
+    }
 
-      let sumFat = 0, sumLiq = 0;
+    function renderizarFinanceiro() {
+      const tbody = document.getElementById('lista-financeiro-body');
+      tbody.innerHTML = '';
+      let faturado = 0, liquido = 0;
 
-      filtradas.forEach((c) => {
-        const indexReal = comandasDados.indexOf(c);
-
-        let badgeClass = 'badge-cabine';
-        let statusIcon = '<i class="fa-solid fa-clock"></i>';
-        if (c.status === 'Pagamento Conferido (Recepção)') {
-          badgeClass = 'badge-recepcao';
-          statusIcon = '<i class="fa-solid fa-circle-check"></i>';
-        } else if (c.status === 'Aprovado (Thiago)') {
-          badgeClass = 'badge-aprovado';
-          statusIcon = '<i class="fa-solid fa-lock"></i>';
-        }
-
-        const valBruto = typeof c.total === 'number' ? c.total : parseFloat(String(c.total || 0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
-        const valLiq = typeof c.total_liquido === 'number' ? c.total_liquido : parseFloat(String(c.total_liquido || c.total || 0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
-
-        sumFat += valBruto;
-        sumLiq += valLiq;
-
-        const btnCheckRecepcao = (c.status === 'Lançado pela Cabine') 
-          ? `<button class="btn-action-check" onclick="checkRecepcao('${c.id}')"><i class="fa-solid fa-check-double"></i> Check Recepção</button>` : '';
+      comandasDados.forEach(c => {
+        const valBruto = parseFloat(String(c.total||0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+        const valLiq = parseFloat(String(c.total_liquido||c.total||0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+        faturado += valBruto;
+        liquido += valLiq;
 
         const row = `
           <tr>
             <td>${c.data}</td>
             <td><strong>${c.paciente || c.cliente}</strong></td>
-            <td>${c.vendedor || '-'}</td>
-            <td>${c.categoria || '-'}</td>
-            <td><strong>${formatarMoeda(valBruto)}</strong></td>
-            <td><span class="badge-status ${badgeClass}">${statusIcon} ${c.status || 'Pendente'}</span></td>
+            <td>${c.vendedor}</td>
+            <td>${formatarMoeda(valBruto)}</td>
+            <td style="color:var(--success); font-weight:700;">${formatarMoeda(valLiq)}</td>
+            <td><span class="badge-status badge-aprovado">${c.status}</span></td>
             <td>
-              <button class="btn-action-edit" onclick="editarComanda(${indexReal})"><i class="fa-solid fa-pen"></i> Editar</button>
-              ${btnCheckRecepcao}
+              <button class="btn-action-approve" onclick="aprovarFinanceiro('${c.id}')">Aprovar</button>
+              <button class="btn-action-delete" onclick="excluirFinanceiro('${c.id}')">Excluir</button>
             </td>
           </tr>
         `;
         tbody.innerHTML += row;
       });
 
-      atualizarCardsResumo(sumFat, sumLiq);
+      document.getElementById('fin-faturado').innerText = formatarMoeda(faturado);
+      document.getElementById('fin-taxas').innerText = formatarMoeda(faturado - liquido);
+      document.getElementById('fin-liquido').innerText = formatarMoeda(liquido);
     }
 
-    function atualizarCardsResumo(fat, liq) {
-      document.getElementById('total-faturado').innerText = formatarMoeda(fat);
-      document.getElementById('total-liquido-card').innerText = formatarMoeda(liq);
+    async function aprovarFinanceiro(id) {
+      await supabaseClient.from('comandas').update({ status: 'Aprovado (Thiago)' }).eq('id', id);
+      alert('Comanda aprovada no financeiro!');
     }
 
-    function editarComanda(index) {
-      const c = comandasDados[index];
-      
-      document.getElementById('edit_id').value = c.id || '';
-      document.getElementById('paciente').value = c.paciente || c.cliente;
-      document.getElementById('vendedor').value = c.vendedor || '';
-      document.getElementById('categoria').value = c.categoria || 'Atendimento';
-      document.getElementById('data_venda').value = c.data;
-      document.getElementById('indicacao').value = c.indicacao || '';
-      document.getElementById('proximo_atendimento').value = c.proximo_atendimento || '';
-
-      document.getElementById('items-container').innerHTML = '';
-      if(c.itens && c.itens.length > 0) {
-        c.itens.forEach(it => addItemRow(it.nome, it.qtd, it.valor, it.desc));
-      } else {
-        addItemRow();
+    async function excluirFinanceiro(id) {
+      if (confirm('Deseja excluir definitivamente esta comanda?')) {
+        await supabaseClient.from('comandas').delete().eq('id', id);
+        alert('Comanda removida!');
       }
-
-      document.getElementById('payments-container').innerHTML = '';
-      if(c.pagamentos && c.pagamentos.length > 0) {
-        c.pagamentos.forEach(p => addPaymentRow(p.valor, p.metodo, p.conta, p.vencimento, p.parcelas));
-      } else {
-        addPaymentRow();
-      }
-
-      document.getElementById('form-title').innerText = "Editar Comanda";
-      document.getElementById('edit-indicator').style.display = "inline";
-      document.getElementById('btn-save-main').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Salvar Alterações';
-
-      switchTab('comanda', document.querySelectorAll('.btn-nav')[0]);
-    }
-
-    async function checkRecepcao(id) {
-      if (!id) return;
-      const { error } = await supabaseClient.from('comandas').update({ status: 'Pagamento Conferido (Recepção)' }).eq('id', id);
-      if (!error) {
-        alert('Pagamento marcado como conferido!');
-      } else {
-        alert('Erro ao atualizar: ' + error.message);
-      }
-    }
-
-    function filtrarComandas() {
-      renderizarHistorico();
     }
   </script>
 </body>
