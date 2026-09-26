@@ -185,8 +185,9 @@
     .badge-aprovado { background-color: #dcfce7; color: #15803d; }
 
     .btn-action-approve { background: var(--gold-primary); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; }
+    .btn-action-edit { background: #fef3c7; border: 1px solid #fde68a; color: #b45309; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-right: 4px; }
     .btn-action-delete { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-left: 4px; }
-    .btn-action-check { background: var(--info-blue); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; }
+    .btn-action-check { background: var(--info-blue); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-right: 4px; }
 
     @media (max-width: 768px) {
       .dynamic-row, .payment-row { grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -228,14 +229,16 @@
 
   <div class="container">
     
-    <!-- ABA 1: NOVA VENDA -->
+    <!-- ABA 1: NOVA VENDA / EDIÇÃO -->
     <div id="tab-comanda" class="tab-content active">
       <div class="card">
         <div class="card-title">
-          <span>Nova Venda Personalizada</span>
+          <span id="lbl-form-title">Nova Venda Personalizada</span>
         </div>
         
         <form id="formComanda" onsubmit="salvarComanda(event)">
+          <input type="hidden" id="edit_id" value="">
+
           <div class="form-grid">
             <div class="form-group">
               <label>Cliente / Paciente *</label>
@@ -306,7 +309,7 @@
       </div>
     </div>
 
-    <!-- ABA 2: RECEPÇÃO (CHECK DE PAGAMENTO) -->
+    <!-- ABA 2: RECEPÇÃO (CHECK, EDITAR E EXCLUIR) -->
     <div id="tab-recepcao" class="tab-content">
       <div class="card">
         <div class="card-title">Fila de Conferência da Recepção</div>
@@ -319,7 +322,7 @@
                 <th>Vendedor</th>
                 <th>Valor Total</th>
                 <th>Status</th>
-                <th>Ação Recepção</th>
+                <th>Ações Recepção</th>
               </tr>
             </thead>
             <tbody id="lista-recepcao-body">
@@ -439,15 +442,15 @@
       renderizarFinanceiro();
     }
 
-    function addItemRow() {
+    function addItemRow(nome = '', qtd = 1, valor = '0.00', desc = '0.00') {
       const container = document.getElementById('items-container');
       const div = document.createElement('div');
       div.className = 'dynamic-row';
       div.innerHTML = `
-        <input type="text" placeholder="Procedimento ou Produto" class="item-nome" required>
-        <input type="number" placeholder="Qtd" class="item-qtd" value="1" min="1" oninput="calcularGeral()">
-        <input type="number" step="0.01" placeholder="Valor" class="item-valor" value="0.00" oninput="calcularGeral()">
-        <input type="number" step="0.01" placeholder="Desc." class="item-desc" value="0.00" oninput="calcularGeral()">
+        <input type="text" placeholder="Procedimento ou Produto" class="item-nome" value="${nome}" required>
+        <input type="number" placeholder="Qtd" class="item-qtd" value="${qtd}" min="1" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Valor" class="item-valor" value="${valor}" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Desc." class="item-desc" value="${desc}" oninput="calcularGeral()">
         <input type="text" placeholder="Total" class="item-total" value="R$ 0,00" readonly>
         <button type="button" class="btn-remove-row" onclick="this.parentElement.remove(); calcularGeral();"><i class="fa-solid fa-trash"></i></button>
       `;
@@ -455,35 +458,41 @@
       calcularGeral();
     }
 
-    function addPaymentRow() {
+    function addPaymentRow(valor = '0.00', metodo = 'Mastercard', conta = 'ITAÚ', venc = '', parcelas = 'A vista') {
       const container = document.getElementById('payments-container');
       const div = document.createElement('div');
       div.className = 'payment-row';
       div.innerHTML = `
-        <input type="number" step="0.01" placeholder="Valor" class="pay-valor" value="0.00" oninput="calcularGeral()">
+        <input type="number" step="0.01" placeholder="Valor" class="pay-valor" value="${valor}" oninput="calcularGeral()">
         <select class="pay-metodo" onchange="calcularGeral()">
-          <option value="Mastercard">Mastercard</option>
-          <option value="Visa">Visa</option>
-          <option value="Amex">Amex</option>
-          <option value="Elo">Elo</option>
-          <option value="PIX">PIX</option>
-          <option value="Dinheiro">Dinheiro</option>
+          <option value="Mastercard" ${metodo === 'Mastercard' ? 'selected' : ''}>Mastercard</option>
+          <option value="Visa" ${metodo === 'Visa' ? 'selected' : ''}>Visa</option>
+          <option value="Amex" ${metodo === 'Amex' ? 'selected' : ''}>Amex</option>
+          <option value="Elo" ${metodo === 'Elo' ? 'selected' : ''}>Elo</option>
+          <option value="PIX" ${metodo === 'PIX' ? 'selected' : ''}>PIX</option>
+          <option value="Dinheiro" ${metodo === 'Dinheiro' ? 'selected' : ''}>Dinheiro</option>
         </select>
         <select class="pay-conta">
-          <option value="ITAÚ">ITAÚ</option>
-          <option value="INTER">INTER</option>
-          <option value="CAIXINHA">CAIXINHA</option>
+          <option value="ITAÚ" ${conta === 'ITAÚ' ? 'selected' : ''}>ITAÚ</option>
+          <option value="INTER" ${conta === 'INTER' ? 'selected' : ''}>INTER</option>
+          <option value="CAIXINHA" ${conta === 'CAIXINHA' ? 'selected' : ''}>CAIXINHA</option>
         </select>
         <input type="date" class="pay-vencimento">
         <select class="pay-parcelas" onchange="calcularGeral()">
-          <option value="A vista">A vista (1x)</option>
-          <option value="Débito à vista">Débito à vista</option>
-          <option value="2x">2x</option><option value="3x">3x</option><option value="4x">4x</option><option value="5x">5x</option><option value="6x">6x</option>
+          <option value="A vista" ${parcelas === 'A vista' ? 'selected' : ''}>A vista (1x)</option>
+          <option value="Débito à vista" ${parcelas === 'Débito à vista' ? 'selected' : ''}>Débito à vista</option>
+          <option value="2x" ${parcelas === '2x' ? 'selected' : ''}>2x</option>
+          <option value="3x" ${parcelas === '3x' ? 'selected' : ''}>3x</option>
+          <option value="4x" ${parcelas === '4x' ? 'selected' : ''}>4x</option>
+          <option value="5x" ${parcelas === '5x' ? 'selected' : ''}>5x</option>
+          <option value="6x" ${parcelas === '6x' ? 'selected' : ''}>6x</option>
         </select>
         <button type="button" class="btn-remove-row" onclick="this.parentElement.remove(); calcularGeral();"><i class="fa-solid fa-trash"></i></button>
       `;
       container.appendChild(div);
-      div.querySelector('.pay-vencimento').valueAsDate = new Date();
+      const inputVenc = div.querySelector('.pay-vencimento');
+      if(venc) inputVenc.value = venc;
+      else inputVenc.valueAsDate = new Date();
       calcularGeral();
     }
 
@@ -528,6 +537,7 @@
       const btn = document.getElementById('btn-save-main');
       btn.disabled = true;
 
+      const editId = document.getElementById('edit_id').value;
       const pacienteNome = document.getElementById('paciente').value;
       const vendedorNome = document.getElementById('vendedor').value;
 
@@ -565,21 +575,40 @@
         pagamentos: pagamentosArray,
         total: formatarMoeda(totalBrutoCalc),
         total_liquido: formatarMoeda(totalLiquidoCalc),
-        status: 'Lançado pela Cabine'
+        status: editId ? 'Edição pela Recepção' : 'Lançado pela Cabine'
       };
 
-      const { data, error } = await supabaseClient.from('comandas').insert([novaComanda]).select();
+      let error;
+      if (editId) {
+        const res = await supabaseClient.from('comandas').update(novaComanda).eq('id', editId);
+        error = res.error;
+      } else {
+        const res = await supabaseClient.from('comandas').insert([novaComanda]).select();
+        error = res.error;
+      }
+
       btn.disabled = false;
 
       if (!error) {
-        alert('Comanda gravada e sincronizada com sucesso!');
-        document.getElementById('formComanda').reset();
-        document.getElementById('data_venda').valueAsDate = new Date();
+        alert(editId ? 'Comanda atualizada com sucesso!' : 'Comanda gravada com sucesso!');
+        resetarFormulario();
         await carregarComandasInicial();
         switchTab('recepcao', document.querySelectorAll('.btn-nav')[1]);
       } else {
         alert('Erro ao salvar no banco: ' + error.message);
       }
+    }
+
+    function resetarFormulario() {
+      document.getElementById('formComanda').reset();
+      document.getElementById('edit_id').value = '';
+      document.getElementById('lbl-form-title').innerText = 'Nova Venda Personalizada';
+      document.getElementById('btn-save-main').innerHTML = '<i class="fa-solid fa-check-circle"></i> Gravar Comanda';
+      document.getElementById('data_venda').valueAsDate = new Date();
+      document.getElementById('items-container').innerHTML = '';
+      document.getElementById('payments-container').innerHTML = '';
+      addItemRow();
+      addPaymentRow();
     }
 
     function renderizarRecepcao() {
@@ -599,7 +628,9 @@
             <td>${c.total || 'R$ 0,00'}</td>
             <td><span class="badge-status badge-cabine">${c.status || 'Lançado'}</span></td>
             <td>
-              ${c.status === 'Lançado pela Cabine' ? `<button class="btn-action-check" onclick="checkRecepcao('${c.id}')">Check Recepção</button>` : 'Conferido'}
+              ${c.status !== 'Pagamento Conferido (Recepção)' && c.status !== 'Aprovado (Thiago)' ? `<button class="btn-action-check" onclick="checkRecepcao('${c.id}')">Check Recepção</button>` : ''}
+              <button class="btn-action-edit" onclick="editarComanda('${c.id}')">Editar</button>
+              <button class="btn-action-delete" onclick="excluirComanda('${c.id}')">Excluir</button>
             </td>
           </tr>
         `;
@@ -607,10 +638,50 @@
       });
     }
 
+    function editarComanda(id) {
+      const c = comandasDados.find(item => item.id === id);
+      if (!c) return;
+
+      document.getElementById('edit_id').value = c.id;
+      document.getElementById('paciente').value = c.paciente || c.paciente_nome || '';
+      document.getElementById('vendedor').value = c.vendedor || c.profissional_nome || '';
+      document.getElementById('categoria').value = c.categoria || 'Atendimento';
+      document.getElementById('data_venda').value = c.data || '';
+      document.getElementById('indicacao').value = c.indicacao || '';
+      document.getElementById('proximo_atendimento').value = c.proximo_atendimento || '';
+
+      document.getElementById('items-container').innerHTML = '';
+      if (c.itens && Array.isArray(c.itens) && c.itens.length > 0) {
+        c.itens.forEach(it => addItemRow(it.nome, it.qtd, it.valor, it.desc));
+      } else {
+        addItemRow();
+      }
+
+      document.getElementById('payments-container').innerHTML = '';
+      if (c.pagamentos && Array.isArray(c.pagamentos) && c.pagamentos.length > 0) {
+        c.pagamentos.forEach(pg => addPaymentRow(pg.valor, pg.metodo, pg.conta, pg.vencimento, pg.parcelas));
+      } else {
+        addPaymentRow();
+      }
+
+      document.getElementById('lbl-form-title').innerText = 'Editar Comanda #' + c.id.substring(0, 6);
+      document.getElementById('btn-save-main').innerHTML = '<i class="fa-solid fa-rotate"></i> Atualizar Comanda';
+
+      switchTab('comanda', document.querySelectorAll('.btn-nav')[0]);
+    }
+
     async function checkRecepcao(id) {
       await supabaseClient.from('comandas').update({ status: 'Pagamento Conferido (Recepção)' }).eq('id', id);
       await carregarComandasInicial();
       alert('Conferência registrada!');
+    }
+
+    async function excluirComanda(id) {
+      if (confirm('Deseja excluir esta comanda da fila da recepção?')) {
+        await supabaseClient.from('comandas').delete().eq('id', id);
+        await carregarComandasInicial();
+        alert('Comanda removida!');
+      }
     }
 
     function renderizarFinanceiro() {
@@ -638,7 +709,7 @@
             <td><span class="badge-status badge-aprovado">${c.status || 'Lançado'}</span></td>
             <td>
               <button class="btn-action-approve" onclick="aprovarFinanceiro('${c.id}')">Aprovar</button>
-              <button class="btn-action-delete" onclick="excluirFinanceiro('${c.id}')">Excluir</button>
+              <button class="btn-action-delete" onclick="excluirComanda('${c.id}')">Excluir</button>
             </td>
           </tr>
         `;
@@ -654,14 +725,6 @@
       await supabaseClient.from('comandas').update({ status: 'Aprovado (Thiago)' }).eq('id', id);
       await carregarComandasInicial();
       alert('Comanda aprovada no financeiro!');
-    }
-
-    async function excluirFinanceiro(id) {
-      if (confirm('Deseja excluir definitivamente esta comanda?')) {
-        await supabaseClient.from('comandas').delete().eq('id', id);
-        await carregarComandasInicial();
-        alert('Comanda removida!');
-      }
     }
   </script>
 </body>
