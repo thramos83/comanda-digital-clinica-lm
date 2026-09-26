@@ -122,7 +122,6 @@
       box-shadow: 0 0 0 3px rgba(197,160,89,0.12); 
     }
 
-    /* Tabelas Dinâmicas */
     .section-block { margin-top: 25px; padding-top: 16px; border-top: 1px dashed var(--sand-border); }
     .section-block-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--gold-dark); letter-spacing: 1px; margin-bottom: 12px; }
 
@@ -177,7 +176,6 @@
       text-align: center;
     }
 
-    /* Painel de Fechamento & Falta Pagar */
     .totals-summary {
       background-color: var(--sand-light);
       border: 1px solid var(--sand-border);
@@ -225,7 +223,6 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* Histórico */
     .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 22px; }
     .summary-card { background: var(--sand-light); border: 1px solid var(--sand-border); border-radius: 12px; padding: 16px; text-align: center; }
     .summary-card .title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
@@ -317,7 +314,6 @@
       </div>
 
       <div class="header-actions">
-        <!-- Rótulo Fixo para a Equipe -->
         <div class="user-access-badge">
           <i class="fa-solid fa-user-check"></i> Recepção / Profissional
         </div>
@@ -332,7 +328,6 @@
 
   <div class="container">
     
-    <!-- ABA NOVA VENDA / EDITAR COMANDA -->
     <div id="tab-comanda" class="tab-content active">
       <div class="card">
         <div class="card-title">
@@ -341,7 +336,7 @@
         </div>
         
         <form id="formComanda" onsubmit="salvarComanda(event)">
-          <input type="hidden" id="edit_index" value="-1">
+          <input type="hidden" id="edit_id" value="">
 
           <div class="form-grid">
             <div class="form-group">
@@ -388,7 +383,6 @@
             </div>
           </div>
 
-          <!-- BLOCO 1: PROCEDIMENTOS / PRODUTOS -->
           <div class="section-block">
             <div class="section-block-title">Procedimentos / Produtos</div>
             
@@ -407,7 +401,6 @@
             </button>
           </div>
 
-          <!-- BLOCO 2: RECEBIMENTO FRACIONADO -->
           <div class="section-block">
             <div class="section-block-title">Recebimento (Múltiplas Formas)</div>
             
@@ -426,7 +419,6 @@
             </button>
           </div>
 
-          <!-- BLOCO 3: TOTALIZADORES, TAXAS AUTOMÁTICAS E RESTANTE -->
           <div class="totals-summary">
             <div class="total-line">
               <span>Total Bruto (Itens):</span>
@@ -457,7 +449,6 @@
       </div>
     </div>
 
-    <!-- ABA HISTÓRICO / RECEPÇÃO -->
     <div id="tab-historico" class="tab-content">
       <div class="summary-grid">
         <div class="summary-card">
@@ -510,11 +501,15 @@
   </div>
 
   <script>
+    // SUPABASE DIRECT CLIENT INTEGRATION
+    const SUPABASE_URL = 'https://ntvcgqbenpxfxvejxkoy.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_UxiIkEbCXmYA10M0f_PIoA_1j52p3gB';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     document.getElementById('data_venda').valueAsDate = new Date();
     let comandasDados = [];
     let filtroPeriodoAtual = 'hoje';
 
-    // TABELA DE TAXAS MAQUININHA REDE
     const TAXAS_REDE = {
       'Mastercard': { 'Débito à vista': 1.09, 'A vista': 2.29, '2x': 4.21, '3x': 4.85, '4x': 5.49, '5x': 6.13, '6x': 6.77, '7x': 7.61, '8x': 8.25, '9x': 8.89, '10x': 9.53, '11x': 10.17, '12x': 10.81 },
       'Visa':       { 'Débito à vista': 1.09, 'A vista': 2.29, '2x': 4.21, '3x': 4.85, '4x': 5.49, '5x': 6.13, '6x': 6.77, '7x': 7.61, '8x': 8.25, '9x': 8.89, '10x': 9.53, '11x': 10.17, '12x': 10.81 },
@@ -530,7 +525,38 @@
     window.onload = function() {
       addItemRow();
       addPaymentRow();
+      carregarComandasInicial();
+      ativarRealtimeSupabase();
     };
+
+    async function carregarComandasInicial() {
+      const { data, error } = await supabaseClient
+        .from('comandas')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        comandasDados = data;
+        renderizarHistorico();
+      }
+    }
+
+    function ativarRealtimeSupabase() {
+      supabaseClient
+        .channel('public:comandas')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'comandas' }, payload => {
+          if (payload.eventType === 'INSERT') {
+            comandasDados.unshift(payload.new);
+          } else if (payload.eventType === 'UPDATE') {
+            const idx = comandasDados.findIndex(c => c.id === payload.new.id);
+            if (idx >= 0) comandasDados[idx] = payload.new;
+          } else if (payload.eventType === 'DELETE') {
+            comandasDados = comandasDados.filter(c => c.id !== payload.old.id);
+          }
+          renderizarHistorico();
+        })
+        .subscribe();
+    }
 
     function switchTab(tab, btn) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -679,7 +705,7 @@
     async function salvarComanda(e) {
       e.preventDefault();
       
-      const editIndex = parseInt(document.getElementById('edit_index').value);
+      const editId = document.getElementById('edit_id').value;
       const cliente = document.getElementById('paciente').value;
       const btnSalvar = document.getElementById('btn-save-main');
 
@@ -693,41 +719,29 @@
         itens: capturarItensFormulario(),
         pagamentos: capturarPagamentosFormulario(),
         total: document.getElementById('lbl-total-bruto').innerText,
-        totalLiquido: document.getElementById('lbl-total-liquido').innerText,
+        total_liquido: document.getElementById('lbl-total-liquido').innerText,
         status: 'Lançado pela Cabine'
       };
 
       btnSalvar.disabled = true;
-      btnSalvar.innerText = 'Gravando no Supabase...';
+      btnSalvar.innerText = 'Enviando ao Supabase...';
 
       try {
-        const resposta = await fetch('/api/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(novaVenda)
-        });
-
-        const resultado = await resposta.json();
-
-        if (editIndex >= 0) {
-          comandasDados[editIndex] = novaVenda;
-          alert('Comanda de ' + cliente + ' atualizada! Enviada para conferência da recepção.');
+        if (editId) {
+          const { error } = await supabaseClient.from('comandas').update(novaVenda).eq('id', editId);
+          if (error) throw error;
+          alert('Comanda de ' + cliente + ' atualizada!');
         } else {
-          comandasDados.unshift(novaVenda);
-          alert('Comanda de ' + cliente + ' gravada no Supabase! Enviada para a recepção.');
+          const { error } = await supabaseClient.from('comandas').insert([novaVenda]);
+          if (error) throw error;
+          alert('Comanda de ' + cliente + ' gravada no Supabase em tempo real!');
         }
 
         resetarFormulario();
-        renderizarHistorico();
+        switchTab('historico', document.querySelectorAll('.btn-nav')[1]);
       } catch (erro) {
-        if (editIndex >= 0) {
-          comandasDados[editIndex] = novaVenda;
-        } else {
-          comandasDados.unshift(novaVenda);
-        }
-        alert('Comanda de ' + cliente + ' registrada com sucesso!');
-        resetarFormulario();
-        renderizarHistorico();
+        console.error('Erro ao salvar no Supabase:', erro);
+        alert('Erro ao salvar no banco de dados: ' + (erro.message || 'Verifique sua conexão.'));
       } finally {
         btnSalvar.disabled = false;
         btnSalvar.innerHTML = '<i class="fa-solid fa-check-circle"></i> Gravar Comanda';
@@ -736,7 +750,7 @@
 
     function resetarFormulario() {
       document.getElementById('formComanda').reset();
-      document.getElementById('edit_index').value = "-1";
+      document.getElementById('edit_id').value = "";
       document.getElementById('form-title').innerText = "Nova Venda Personalizada";
       document.getElementById('edit-indicator').style.display = "none";
       document.getElementById('btn-save-main').innerHTML = '<i class="fa-solid fa-check-circle"></i> Gravar Comanda';
@@ -766,13 +780,13 @@
       const dataFim = document.getElementById('filtro-data-fim').value;
 
       let filtradas = comandasDados.filter(c => {
-        const matchNome = (c.cliente || c.paciente || '').toLowerCase().includes(termo);
+        const matchNome = (c.paciente || c.cliente || '').toLowerCase().includes(termo);
         let matchData = true;
 
         if (filtroPeriodoAtual === 'hoje') {
           matchData = (c.data === hojeStr);
         } else if (filtroPeriodoAtual === 'mes') {
-          matchData = c.data.startsWith(mesAtualStr);
+          matchData = c.data && c.data.startsWith(mesAtualStr);
         } else if (filtroPeriodoAtual === 'custom' && dataInicio && dataFim) {
           matchData = (c.data >= dataInicio && c.data <= dataFim);
         }
@@ -801,23 +815,23 @@
           statusIcon = '<i class="fa-solid fa-lock"></i>';
         }
 
-        const valBruto = parseFloat(c.total.replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
-        const valLiq = parseFloat((c.totalLiquido || c.total).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+        const valBruto = typeof c.total === 'number' ? c.total : parseFloat(String(c.total || 0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+        const valLiq = typeof c.total_liquido === 'number' ? c.total_liquido : parseFloat(String(c.total_liquido || c.total || 0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
 
         sumFat += valBruto;
         sumLiq += valLiq;
 
         const btnCheckRecepcao = (c.status === 'Lançado pela Cabine') 
-          ? `<button class="btn-action-check" onclick="checkRecepcao(${indexReal})"><i class="fa-solid fa-check-double"></i> Check Recepção</button>` : '';
+          ? `<button class="btn-action-check" onclick="checkRecepcao('${c.id}')"><i class="fa-solid fa-check-double"></i> Check Recepção</button>` : '';
 
         const row = `
           <tr>
             <td>${c.data}</td>
-            <td><strong>${c.cliente || c.paciente}</strong></td>
-            <td>${c.vendedor}</td>
-            <td>${c.categoria}</td>
-            <td><strong>${c.total}</strong></td>
-            <td><span class="badge-status ${badgeClass}">${statusIcon} ${c.status}</span></td>
+            <td><strong>${c.paciente || c.cliente}</strong></td>
+            <td>${c.vendedor || '-'}</td>
+            <td>${c.categoria || '-'}</td>
+            <td><strong>${formatarMoeda(valBruto)}</strong></td>
+            <td><span class="badge-status ${badgeClass}">${statusIcon} ${c.status || 'Pendente'}</span></td>
             <td>
               <button class="btn-action-edit" onclick="editarComanda(${indexReal})"><i class="fa-solid fa-pen"></i> Editar</button>
               ${btnCheckRecepcao}
@@ -838,10 +852,10 @@
     function editarComanda(index) {
       const c = comandasDados[index];
       
-      document.getElementById('edit_index').value = index;
-      document.getElementById('paciente').value = c.cliente || c.paciente;
-      document.getElementById('vendedor').value = c.vendedor;
-      document.getElementById('categoria').value = c.categoria;
+      document.getElementById('edit_id').value = c.id || '';
+      document.getElementById('paciente').value = c.paciente || c.cliente;
+      document.getElementById('vendedor').value = c.vendedor || '';
+      document.getElementById('categoria').value = c.categoria || 'Atendimento';
       document.getElementById('data_venda').value = c.data;
       document.getElementById('indicacao').value = c.indicacao || '';
       document.getElementById('proximo_atendimento').value = c.proximo_atendimento || '';
@@ -867,10 +881,14 @@
       switchTab('comanda', document.querySelectorAll('.btn-nav')[0]);
     }
 
-    function checkRecepcao(index) {
-      comandasDados[index].status = 'Pagamento Conferido (Recepção)';
-      alert('Conferência realizada! Comanda marcada como "Pagamento Conferido".');
-      renderizarHistorico();
+    async function checkRecepcao(id) {
+      if (!id) return;
+      const { error } = await supabaseClient.from('comandas').update({ status: 'Pagamento Conferido (Recepção)' }).eq('id', id);
+      if (!error) {
+        alert('Pagamento marcado como conferido!');
+      } else {
+        alert('Erro ao atualizar: ' + error.message);
+      }
     }
 
     function filtrarComandas() {
