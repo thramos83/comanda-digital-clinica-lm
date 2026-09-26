@@ -1,7 +1,10 @@
 {
+  "version": 2,
   "cleanUrls": true,
-  "rewrites": [
-    { "source": "/api/submit", "destination": "/api/submit.js" },
-    { "source": "/financeiro", "destination": "/financeiro.html" }
+  "routes": [
+    { "src": "/api/submit", "dest": "/api/submit.js" },
+    { "src": "/financeiro", "dest": "/financeiro.html" },
+    { "src": "/financeiro.html", "dest": "/financeiro.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
