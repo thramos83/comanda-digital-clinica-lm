@@ -32,7 +32,7 @@
       padding: 18px 20px;
     }
     .header-container {
-      max-width: 1100px;
+      max-width: 1150px;
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -64,13 +64,13 @@
     }
     .btn-nav:hover, .btn-nav.active { background: var(--gold-primary); color: #ffffff; border-color: var(--gold-primary); }
 
-    .container { max-width: 1100px; margin: 25px auto; padding: 0 18px; }
+    .container { max-width: 1150px; margin: 25px auto; padding: 0 18px; }
     .card {
       background: var(--bg-card);
       border-radius: 16px;
       border: 1px solid var(--sand-border);
       box-shadow: 0 8px 25px rgba(58,50,45,0.03);
-      padding: 28px;
+      padding: 24px;
       margin-bottom: 25px;
     }
     .card-title {
@@ -78,12 +78,14 @@
       font-size: 22px;
       font-weight: 700;
       color: var(--gold-dark);
-      margin-bottom: 22px;
+      margin-bottom: 18px;
       padding-bottom: 10px;
       border-bottom: 1px solid var(--sand-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
@@ -102,20 +104,23 @@
       transition: all 0.2s ease;
     }
 
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: var(--sand-light);
+      padding: 14px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      align-items: flex-end;
+    }
+
     .section-block { margin-top: 25px; padding-top: 16px; border-top: 1px dashed var(--sand-border); }
     .section-block-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--gold-dark); letter-spacing: 1px; margin-bottom: 12px; }
 
-    .dynamic-row {
+    .dynamic-row, .payment-row {
       display: grid;
-      grid-template-columns: 3fr 1fr 1.5fr 1.5fr 1.5fr 40px;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .payment-row {
-      display: grid;
-      grid-template-columns: 1.5fr 2fr 1.5fr 1.5fr 1.5fr 40px;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) 40px;
       gap: 10px;
       align-items: center;
       margin-bottom: 10px;
@@ -134,7 +139,6 @@
       margin-top: 8px;
       padding: 8px 14px;
       border-radius: 8px;
-      transition: all 0.2s;
     }
 
     .btn-remove-row { background: none; border: none; color: var(--danger); cursor: pointer; font-size: 15px; text-align: center; }
@@ -169,7 +173,7 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 22px; }
     .summary-card { background: var(--bg-card); border: 1px solid var(--sand-border); border-radius: 12px; padding: 18px; text-align: center; }
     .summary-card .title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.8px; }
     .summary-card .value { font-size: 22px; font-weight: 700; color: var(--gold-dark); margin-top: 6px; }
@@ -183,15 +187,18 @@
     .badge-cabine { background-color: #fef3c7; color: #b45309; }
     .badge-recepcao { background-color: var(--info-blue-bg); color: var(--info-blue); }
     .badge-aprovado { background-color: #dcfce7; color: #15803d; }
+    .badge-deleted { background-color: #fee2e2; color: #991b1b; }
 
     .btn-action-approve { background: var(--gold-primary); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; }
     .btn-action-edit { background: #fef3c7; border: 1px solid #fde68a; color: #b45309; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-right: 4px; }
-    .btn-action-delete { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-left: 4px; }
+    .btn-action-delete { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; }
     .btn-action-check { background: var(--info-blue); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-right: 4px; }
+    .btn-action-restore { background: #e0e7ff; border: 1px solid #c7d2fe; color: #3730a3; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; }
+
+    .export-btn { background: #16a34a; color: #fff; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 600; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 
     @media (max-width: 768px) {
-      .dynamic-row, .payment-row { grid-template-columns: 1fr 1fr; gap: 8px; }
-      .header-container { flex-direction: column; gap: 14px; text-align: center; }
+      .header-container { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
@@ -309,10 +316,47 @@
       </div>
     </div>
 
-    <!-- ABA 2: RECEPÇÃO (CHECK, EDITAR E EXCLUIR) -->
+    <!-- ABA 2: RECEPÇÃO -->
     <div id="tab-recepcao" class="tab-content">
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="title">Bruto Hoje</div>
+          <div class="value" id="rec-bruto-hoje">R$ 0,00</div>
+        </div>
+        <div class="summary-card">
+          <div class="title">Comandas Hoje</div>
+          <div class="value" id="rec-qtd-hoje">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="title">Aguardando Check</div>
+          <div class="value" style="color: var(--gold-dark);" id="rec-pendentes">0</div>
+        </div>
+      </div>
+
       <div class="card">
-        <div class="card-title">Fila de Conferência da Recepção</div>
+        <div class="card-title">
+          <span>Fila de Conferência da Recepção</span>
+        </div>
+
+        <div class="filter-bar">
+          <div class="form-group" style="flex:1;">
+            <label>Filtrar Profissional</label>
+            <select id="filter-rec-vendedor" onchange="renderizarRecepcao()">
+              <option value="">Todos</option>
+              <option value="LORENA MACEDO">LORENA MACEDO</option>
+              <option value="DRA. FATYENE">DRA. FATYENE</option>
+              <option value="DRA. CAMILA">DRA. CAMILA</option>
+              <option value="ALÊ CARDOSO">ALÊ CARDOSO</option>
+              <option value="LETYCIA">LETYCIA</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Data Venda</label>
+            <input type="date" id="filter-rec-data" onchange="renderizarRecepcao()">
+          </div>
+          <button class="btn-add-item" onclick="limparFiltrosRecepcao()"><i class="fa-solid fa-eraser"></i> Limpar</button>
+        </div>
+
         <div class="table-responsive">
           <table>
             <thead>
@@ -337,21 +381,52 @@
     <div id="tab-financeiro" class="tab-content">
       <div class="summary-grid">
         <div class="summary-card">
-          <div class="title">Total Faturado (Bruto)</div>
+          <div class="title">Faturamento Bruto</div>
           <div class="value" id="fin-faturado">R$ 0,00</div>
         </div>
         <div class="summary-card">
-          <div class="title">Taxas de Maquininha (Rede)</div>
+          <div class="title">Taxas Maquininha</div>
           <div class="value" style="color: var(--danger);" id="fin-taxas">R$ 0,00</div>
         </div>
         <div class="summary-card">
           <div class="title">Receita Líquida Real</div>
           <div class="value" style="color: var(--success);" id="fin-liquido">R$ 0,00</div>
         </div>
+        <div class="summary-card">
+          <div class="title">Ticket Médio</div>
+          <div class="value" id="fin-ticket">R$ 0,00</div>
+        </div>
       </div>
 
       <div class="card">
-        <div class="card-title">Painel de Gestão e Aprovação (Thiago)</div>
+        <div class="card-title">
+          <span>Painel Gerencial de Vendas</span>
+          <button class="export-btn" onclick="exportarExcel()"><i class="fa-solid fa-file-excel"></i> Exportar CSV/Excel</button>
+        </div>
+
+        <div class="filter-bar">
+          <div class="form-group" style="flex:1;">
+            <label>Profissional</label>
+            <select id="filter-fin-vendedor" onchange="renderizarFinanceiro()">
+              <option value="">Todos</option>
+              <option value="LORENA MACEDO">LORENA MACEDO</option>
+              <option value="DRA. FATYENE">DRA. FATYENE</option>
+              <option value="DRA. CAMILA">DRA. CAMILA</option>
+              <option value="ALÊ CARDOSO">ALÊ CARDOSO</option>
+              <option value="LETYCIA">LETYCIA</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Visão / Status</label>
+            <select id="filter-fin-status" onchange="renderizarFinanceiro()">
+              <option value="ativas">Comandas Ativas</option>
+              <option value="lixeira">Lixeira / Apagadas (Auditoria)</option>
+              <option value="todas">Todas</option>
+            </select>
+          </div>
+          <button class="btn-add-item" onclick="limparFiltrosFinanceiro()"><i class="fa-solid fa-eraser"></i> Limpar</button>
+        </div>
+
         <div class="table-responsive">
           <table>
             <thead>
@@ -362,11 +437,11 @@
                 <th>Valor Bruto</th>
                 <th>Valor Líquido</th>
                 <th>Status</th>
-                <th>Ações Financeiro</th>
+                <th>Ações Gerenciais</th>
               </tr>
             </thead>
             <tbody id="lista-financeiro-body">
-              <tr><td colspan="7" style="text-align:center;">Nenhuma comanda para aprovação.</td></tr>
+              <tr><td colspan="7" style="text-align:center;">Nenhuma comanda para exibição.</td></tr>
             </tbody>
           </table>
         </div>
@@ -590,7 +665,7 @@
       btn.disabled = false;
 
       if (!error) {
-        alert(editId ? 'Comanda atualizada com sucesso!' : 'Comanda gravada com sucesso!');
+        alert(editId ? 'Comanda atualizada!' : 'Comanda gravada!');
         resetarFormulario();
         await carregarComandasInicial();
         switchTab('recepcao', document.querySelectorAll('.btn-nav')[1]);
@@ -614,12 +689,39 @@
     function renderizarRecepcao() {
       const tbody = document.getElementById('lista-recepcao-body');
       tbody.innerHTML = '';
-      if(comandasDados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhuma comanda cadastrada.</td></tr>';
+
+      const hojeIso = new Date().toISOString().split('T')[0];
+      const vendFiltro = document.getElementById('filter-rec-vendedor').value;
+      const dataFiltro = document.getElementById('filter-rec-data').value;
+
+      // Filtra ativas e aplica busca da recepção
+      const ativas = comandasDados.filter(c => c.status !== 'Excluída pela Recepção' && c.status !== 'Excluída pelo Financeiro');
+      
+      let filtradas = ativas;
+      if (vendFiltro) filtradas = filtradas.filter(c => (c.vendedor || c.profissional_nome) === vendFiltro);
+      if (dataFiltro) filtradas = filtradas.filter(c => c.data === dataFiltro);
+
+      // Métricas da Recepção
+      let brutoHoje = 0, qtdHoje = 0, pendentes = 0;
+      ativas.forEach(c => {
+        if (c.data === hojeIso) {
+          const v = parseFloat(String(c.total||0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+          brutoHoje += v;
+          qtdHoje++;
+        }
+        if (c.status === 'Lançado pela Cabine') pendentes++;
+      });
+
+      document.getElementById('rec-bruto-hoje').innerText = formatarMoeda(brutoHoje);
+      document.getElementById('rec-qtd-hoje').innerText = qtdHoje;
+      document.getElementById('rec-pendentes').innerText = pendentes;
+
+      if(filtradas.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhuma comanda encontrada.</td></tr>';
         return;
       }
 
-      comandasDados.forEach(c => {
+      filtradas.forEach(c => {
         const row = `
           <tr>
             <td>${c.data || ''}</td>
@@ -630,12 +732,18 @@
             <td>
               ${c.status !== 'Pagamento Conferido (Recepção)' && c.status !== 'Aprovado (Thiago)' ? `<button class="btn-action-check" onclick="checkRecepcao('${c.id}')">Check Recepção</button>` : ''}
               <button class="btn-action-edit" onclick="editarComanda('${c.id}')">Editar</button>
-              <button class="btn-action-delete" onclick="excluirComanda('${c.id}')">Excluir</button>
+              <button class="btn-action-delete" onclick="softDeleteComanda('${c.id}', 'Recepção')">Excluir</button>
             </td>
           </tr>
         `;
         tbody.innerHTML += row;
       });
+    }
+
+    function limparFiltrosRecepcao() {
+      document.getElementById('filter-rec-vendedor').value = '';
+      document.getElementById('filter-rec-data').value = '';
+      renderizarRecepcao();
     }
 
     function editarComanda(id) {
@@ -653,16 +761,12 @@
       document.getElementById('items-container').innerHTML = '';
       if (c.itens && Array.isArray(c.itens) && c.itens.length > 0) {
         c.itens.forEach(it => addItemRow(it.nome, it.qtd, it.valor, it.desc));
-      } else {
-        addItemRow();
-      }
+      } else addItemRow();
 
       document.getElementById('payments-container').innerHTML = '';
       if (c.pagamentos && Array.isArray(c.pagamentos) && c.pagamentos.length > 0) {
         c.pagamentos.forEach(pg => addPaymentRow(pg.valor, pg.metodo, pg.conta, pg.vencimento, pg.parcelas));
-      } else {
-        addPaymentRow();
-      }
+      } else addPaymentRow();
 
       document.getElementById('lbl-form-title').innerText = 'Editar Comanda #' + c.id.substring(0, 6);
       document.getElementById('btn-save-main').innerHTML = '<i class="fa-solid fa-rotate"></i> Atualizar Comanda';
@@ -676,28 +780,72 @@
       alert('Conferência registrada!');
     }
 
-    async function excluirComanda(id) {
-      if (confirm('Deseja excluir esta comanda da fila da recepção?')) {
+    // Soft delete: Marca o status como excluída sem perder o registro no banco
+    async function softDeleteComanda(id, origem) {
+      if (confirm(`Tem certeza de que deseja excluir esta comanda? Ela ficará salva na lixeira da auditoria do financeiro.`)) {
+        await supabaseClient.from('comandas').update({ status: `Excluída pela ${origem}` }).eq('id', id);
+        await carregarComandasInicial();
+        alert('Comanda movida para a lixeira/auditoria!');
+      }
+    }
+
+    async function restaurarComanda(id) {
+      await supabaseClient.from('comandas').update({ status: 'Lançado pela Cabine' }).eq('id', id);
+      await carregarComandasInicial();
+      alert('Comanda restaurada com sucesso!');
+    }
+
+    async function hardDeleteComanda(id) {
+      if (confirm('Atenção: deseja remover DEFINITIVAMENTE esta comanda do banco de dados? Esta ação não pode ser desfeita.')) {
         await supabaseClient.from('comandas').delete().eq('id', id);
         await carregarComandasInicial();
-        alert('Comanda removida!');
+        alert('Comanda apagada definitivamente.');
       }
     }
 
     function renderizarFinanceiro() {
       const tbody = document.getElementById('lista-financeiro-body');
       tbody.innerHTML = '';
-      let faturado = 0, liquido = 0;
 
-      if(comandasDados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma comanda no banco.</td></tr>';
+      const vendFiltro = document.getElementById('filter-fin-vendedor').value;
+      const visaoFiltro = document.getElementById('filter-fin-status').value;
+
+      let lista = comandasDados;
+
+      if (vendFiltro) lista = lista.filter(c => (c.vendedor || c.profissional_nome) === vendFiltro);
+
+      if (visaoFiltro === 'ativas') {
+        lista = lista.filter(c => !String(c.status).includes('Excluída'));
+      } else if (visaoFiltro === 'lixeira') {
+        lista = lista.filter(c => String(c.status).includes('Excluída'));
       }
 
-      comandasDados.forEach(c => {
+      let faturado = 0, liquido = 0, qtd = 0;
+
+      lista.forEach(c => {
+        if(!String(c.status).includes('Excluída')) {
+          const valBruto = parseFloat(String(c.total||0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+          const valLiq = parseFloat(String(c.total_liquido||c.total||0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
+          faturado += valBruto;
+          liquido += valLiq;
+          qtd++;
+        }
+      });
+
+      document.getElementById('fin-faturado').innerText = formatarMoeda(faturado);
+      document.getElementById('fin-taxas').innerText = formatarMoeda(faturado - liquido);
+      document.getElementById('fin-liquido').innerText = formatarMoeda(liquido);
+      document.getElementById('fin-ticket').innerText = formatarMoeda(qtd > 0 ? (faturado / qtd) : 0);
+
+      if(lista.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma comanda para a exibição selecionada.</td></tr>';
+        return;
+      }
+
+      lista.forEach(c => {
         const valBruto = parseFloat(String(c.total||0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
         const valLiq = parseFloat(String(c.total_liquido||c.total||0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
-        faturado += valBruto;
-        liquido += valLiq;
+        const isDeleted = String(c.status).includes('Excluída');
 
         const row = `
           <tr>
@@ -705,26 +853,45 @@
             <td><strong>${c.paciente || c.paciente_nome || ''}</strong></td>
             <td>${c.vendedor || c.profissional_nome || ''}</td>
             <td>${formatarMoeda(valBruto)}</td>
-            <td style="color:var(--success); font-weight:700;">${formatarMoeda(valLiq)}</td>
-            <td><span class="badge-status badge-aprovado">${c.status || 'Lançado'}</span></td>
+            <td style="color:${isDeleted ? '#8c827a' : 'var(--success)'}; font-weight:700;">${formatarMoeda(valLiq)}</td>
+            <td><span class="badge-status ${isDeleted ? 'badge-deleted' : 'badge-aprovado'}">${c.status || 'Lançado'}</span></td>
             <td>
-              <button class="btn-action-approve" onclick="aprovarFinanceiro('${c.id}')">Aprovar</button>
-              <button class="btn-action-delete" onclick="excluirComanda('${c.id}')">Excluir</button>
+              ${isDeleted ? `
+                <button class="btn-action-restore" onclick="restaurarComanda('${c.id}')"><i class="fa-solid fa-undo"></i> Restaurar</button>
+                <button class="btn-action-delete" onclick="hardDeleteComanda('${c.id}')"><i class="fa-solid fa-trash"></i> Apagar Total</button>
+              ` : `
+                <button class="btn-action-approve" onclick="aprovarFinanceiro('${c.id}')">Aprovar</button>
+                <button class="btn-action-delete" onclick="softDeleteComanda('${c.id}', 'Financeiro')">Excluir</button>
+              `}
             </td>
           </tr>
         `;
         tbody.innerHTML += row;
       });
+    }
 
-      document.getElementById('fin-faturado').innerText = formatarMoeda(faturado);
-      document.getElementById('fin-taxas').innerText = formatarMoeda(faturado - liquido);
-      document.getElementById('fin-liquido').innerText = formatarMoeda(liquido);
+    function limparFiltrosFinanceiro() {
+      document.getElementById('filter-fin-vendedor').value = '';
+      document.getElementById('filter-fin-status').value = 'ativas';
+      renderizarFinanceiro();
     }
 
     async function aprovarFinanceiro(id) {
       await supabaseClient.from('comandas').update({ status: 'Aprovado (Thiago)' }).eq('id', id);
       await carregarComandasInicial();
       alert('Comanda aprovada no financeiro!');
+    }
+
+    function exportarExcel() {
+      let csv = 'Data;Paciente;Vendedor;Categoria;Total Bruto;Total Liquido;Status\n';
+      comandasDados.forEach(c => {
+        csv += `${c.data};${c.paciente||c.paciente_nome};${c.vendedor||c.profissional_nome};${c.categoria};${c.total};${c.total_liquido};${c.status}\n`;
+      });
+      const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `comandas_clinica_lm_${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
     }
   </script>
 </body>
