@@ -105,15 +105,6 @@
     .section-block { margin-top: 25px; padding-top: 16px; border-top: 1px dashed var(--sand-border); }
     .section-block-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--gold-dark); letter-spacing: 1px; margin-bottom: 12px; }
 
-    .labels-header {
-      display: grid;
-      grid-template-columns: 3fr 1fr 1.5fr 1.5fr 1.5fr 40px;
-      gap: 10px;
-      margin-bottom: 8px;
-      padding: 0 4px;
-    }
-    .labels-header span { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); }
-
     .dynamic-row {
       display: grid;
       grid-template-columns: 3fr 1fr 1.5fr 1.5fr 1.5fr 40px;
@@ -160,7 +151,6 @@
     }
     .total-line { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--text-muted); }
     .total-line.restante { background: #fff3cd; border: 1px solid #ffeeba; border-radius: 8px; padding: 10px 14px; color: #856404; font-weight: 700; margin-top: 4px; }
-    .total-line.restante.pago-zero { background: #d4edda; border-color: #c3e6cb; color: #155724; }
     .total-line.main { font-size: 18px; font-weight: 700; color: var(--gold-dark); border-top: 1px solid var(--sand-border); padding-top: 10px; margin-top: 4px; }
 
     .btn-submit {
@@ -199,8 +189,7 @@
     .btn-action-check { background: var(--info-blue); border: none; color: #fff; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; }
 
     @media (max-width: 768px) {
-      .dynamic-row, .payment-row, .labels-header { grid-template-columns: 1fr 1fr; gap: 8px; }
-      .labels-header { display: none; }
+      .dynamic-row, .payment-row { grid-template-columns: 1fr 1fr; gap: 8px; }
       .header-container { flex-direction: column; gap: 14px; text-align: center; }
     }
   </style>
@@ -243,12 +232,10 @@
     <div id="tab-comanda" class="tab-content active">
       <div class="card">
         <div class="card-title">
-          <span id="form-title">Nova Venda Personalizada</span>
+          <span>Nova Venda Personalizada</span>
         </div>
         
         <form id="formComanda" onsubmit="salvarComanda(event)">
-          <input type="hidden" id="edit_id" value="">
-
           <div class="form-grid">
             <div class="form-group">
               <label>Cliente / Paciente *</label>
@@ -392,7 +379,7 @@
 
     let comandasDados = [];
     let financeiroDesbloqueado = false;
-    const SENHA_MESTRE = "theo240410"; // SUA SENHA DE ACESSO DEFINIDA
+    const SENHA_MESTRE = "theo240410";
 
     const TAXAS_REDE = {
       'Mastercard': { 'Débito à vista': 1.09, 'A vista': 2.29, '2x': 4.21, '3x': 4.85, '4x': 5.49, '5x': 6.13, '6x': 6.77, '7x': 7.61, '8x': 8.25, '9x': 8.89, '10x': 9.53, '11x': 10.17, '12x': 10.81 },
@@ -401,6 +388,9 @@
       'Elo':        { 'Débito à vista': 1.49, 'A vista': 2.59, '2x': 5.01, '3x': 5.65, '4x': 6.29, '5x': 6.93, '6x': 7.57, '7x': 8.41, '8x': 9.05, '9x': 9.69, '10x': 10.33, '11x': 10.97, '12x': 11.61 },
       'Outras bandeiras': { 'Débito à vista': 1.49, 'A vista': 2.59, '2x': 5.01, '3x': 5.65, '4x': 6.29, '5x': 6.93, '6x': 7.57, '7x': 8.41, '8x': 9.05, '9x': 9.69, '10x': 10.33, '11x': 10.97, '12x': 11.61 }
     };
+
+    let totalBrutoCalc = 0;
+    let totalLiquidoCalc = 0;
 
     function formatarMoeda(v) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0); }
 
@@ -424,15 +414,7 @@
     function ativarRealtimeSupabase() {
       supabaseClient.channel('realtime:comandas')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'comandas' }, payload => {
-          if (payload.eventType === 'INSERT') comandasDados.unshift(payload.new);
-          else if (payload.eventType === 'UPDATE') {
-            const idx = comandasDados.findIndex(c => c.id === payload.new.id);
-            if (idx >= 0) comandasDados[idx] = payload.new;
-          } else if (payload.eventType === 'DELETE') {
-            comandasDados = comandasDados.filter(c => c.id !== payload.old.id);
-          }
-          renderizarRecepcao();
-          if(financeiroDesbloqueado) renderizarFinanceiro();
+          carregarComandasInicial();
         }).subscribe();
     }
 
@@ -448,7 +430,6 @@
         const pin = prompt("Digite a senha do Financeiro:");
         if (pin === SENHA_MESTRE) {
           financeiroDesbloqueado = true;
-          alert("Acesso concedido!");
         } else {
           alert("Senha incorreta!");
           return;
@@ -532,11 +513,14 @@
       });
 
       const restante = Math.max(0, totalBruto - totalPago);
+      totalBrutoCalc = totalBruto;
+      totalLiquidoCalc = Math.max(0, totalBruto - totalTaxas);
+
       document.getElementById('lbl-total-bruto').innerText = formatarMoeda(totalBruto);
       document.getElementById('lbl-total-pago-lancado').innerText = formatarMoeda(totalPago);
       document.getElementById('lbl-restante').innerText = formatarMoeda(restante);
       document.getElementById('lbl-taxas-calculadas').innerText = formatarMoeda(totalTaxas);
-      document.getElementById('lbl-total-liquido').innerText = formatarMoeda(Math.max(0, totalBruto - totalTaxas));
+      document.getElementById('lbl-total-liquido').innerText = formatarMoeda(totalLiquidoCalc);
     }
 
     async function salvarComanda(e) {
@@ -544,25 +528,54 @@
       const btn = document.getElementById('btn-save-main');
       btn.disabled = true;
 
+      const pacienteNome = document.getElementById('paciente').value;
+      const vendedorNome = document.getElementById('vendedor').value;
+
+      const itensArray = [];
+      document.querySelectorAll('#items-container .dynamic-row').forEach(row => {
+        itensArray.push({
+          nome: row.querySelector('.item-nome').value,
+          qtd: row.querySelector('.item-qtd').value,
+          valor: row.querySelector('.item-valor').value,
+          desc: row.querySelector('.item-desc').value
+        });
+      });
+
+      const pagamentosArray = [];
+      document.querySelectorAll('#payments-container .payment-row').forEach(row => {
+        pagamentosArray.push({
+          valor: row.querySelector('.pay-valor').value,
+          metodo: row.querySelector('.pay-metodo').value,
+          conta: row.querySelector('.pay-conta').value,
+          vencimento: row.querySelector('.pay-vencimento').value,
+          parcelas: row.querySelector('.pay-parcelas').value
+        });
+      });
+
       const novaComanda = {
         data: document.getElementById('data_venda').value,
-        paciente: document.getElementById('paciente').value,
-        vendedor: document.getElementById('vendedor').value,
+        paciente: pacienteNome,
+        paciente_nome: pacienteNome,
+        vendedor: vendedorNome,
+        profissional_nome: vendedorNome,
         categoria: document.getElementById('categoria').value,
         indicacao: document.getElementById('indicacao').value,
         proximo_atendimento: document.getElementById('proximo_atendimento').value,
-        total: document.getElementById('lbl-total-bruto').innerText,
-        total_liquido: document.getElementById('lbl-total-liquido').innerText,
+        itens: itensArray,
+        pagamentos: pagamentosArray,
+        total: formatarMoeda(totalBrutoCalc),
+        total_liquido: formatarMoeda(totalLiquidoCalc),
         status: 'Lançado pela Cabine'
       };
 
-      const { error } = await supabaseClient.from('comandas').insert([novaComanda]);
+      const { data, error } = await supabaseClient.from('comandas').insert([novaComanda]).select();
       btn.disabled = false;
 
       if (!error) {
-        alert('Comanda enviada com sucesso!');
+        alert('Comanda gravada e sincronizada com sucesso!');
         document.getElementById('formComanda').reset();
         document.getElementById('data_venda').valueAsDate = new Date();
+        await carregarComandasInicial();
         switchTab('recepcao', document.querySelectorAll('.btn-nav')[1]);
       } else {
         alert('Erro ao salvar no banco: ' + error.message);
@@ -572,14 +585,19 @@
     function renderizarRecepcao() {
       const tbody = document.getElementById('lista-recepcao-body');
       tbody.innerHTML = '';
+      if(comandasDados.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhuma comanda cadastrada.</td></tr>';
+        return;
+      }
+
       comandasDados.forEach(c => {
         const row = `
           <tr>
-            <td>${c.data}</td>
-            <td><strong>${c.paciente || c.cliente}</strong></td>
-            <td>${c.vendedor}</td>
-            <td>${c.total}</td>
-            <td><span class="badge-status badge-cabine">${c.status}</span></td>
+            <td>${c.data || ''}</td>
+            <td><strong>${c.paciente || c.paciente_nome || ''}</strong></td>
+            <td>${c.vendedor || c.profissional_nome || ''}</td>
+            <td>${c.total || 'R$ 0,00'}</td>
+            <td><span class="badge-status badge-cabine">${c.status || 'Lançado'}</span></td>
             <td>
               ${c.status === 'Lançado pela Cabine' ? `<button class="btn-action-check" onclick="checkRecepcao('${c.id}')">Check Recepção</button>` : 'Conferido'}
             </td>
@@ -591,6 +609,7 @@
 
     async function checkRecepcao(id) {
       await supabaseClient.from('comandas').update({ status: 'Pagamento Conferido (Recepção)' }).eq('id', id);
+      await carregarComandasInicial();
       alert('Conferência registrada!');
     }
 
@@ -598,6 +617,10 @@
       const tbody = document.getElementById('lista-financeiro-body');
       tbody.innerHTML = '';
       let faturado = 0, liquido = 0;
+
+      if(comandasDados.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma comanda no banco.</td></tr>';
+      }
 
       comandasDados.forEach(c => {
         const valBruto = parseFloat(String(c.total||0).replace('R$', '').replace(/\./g, '').replace(',', '.')) || 0;
@@ -607,12 +630,12 @@
 
         const row = `
           <tr>
-            <td>${c.data}</td>
-            <td><strong>${c.paciente || c.cliente}</strong></td>
-            <td>${c.vendedor}</td>
+            <td>${c.data || ''}</td>
+            <td><strong>${c.paciente || c.paciente_nome || ''}</strong></td>
+            <td>${c.vendedor || c.profissional_nome || ''}</td>
             <td>${formatarMoeda(valBruto)}</td>
             <td style="color:var(--success); font-weight:700;">${formatarMoeda(valLiq)}</td>
-            <td><span class="badge-status badge-aprovado">${c.status}</span></td>
+            <td><span class="badge-status badge-aprovado">${c.status || 'Lançado'}</span></td>
             <td>
               <button class="btn-action-approve" onclick="aprovarFinanceiro('${c.id}')">Aprovar</button>
               <button class="btn-action-delete" onclick="excluirFinanceiro('${c.id}')">Excluir</button>
@@ -629,12 +652,14 @@
 
     async function aprovarFinanceiro(id) {
       await supabaseClient.from('comandas').update({ status: 'Aprovado (Thiago)' }).eq('id', id);
+      await carregarComandasInicial();
       alert('Comanda aprovada no financeiro!');
     }
 
     async function excluirFinanceiro(id) {
       if (confirm('Deseja excluir definitivamente esta comanda?')) {
         await supabaseClient.from('comandas').delete().eq('id', id);
+        await carregarComandasInicial();
         alert('Comanda removida!');
       }
     }
